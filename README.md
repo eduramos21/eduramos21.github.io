@@ -42,6 +42,8 @@ npm run test:prod # the same suite against the deployed site
 ```
 index.html          the whole page, anchor sections
 work/               one case study per file
+                      three from an open-source framework I built,
+                      one on testing generative-AI output for determinism
 css/                reset, then tokens and components
 js/main.js          mobile nav and active-section highlight, nothing else
 e2e/                the suite above

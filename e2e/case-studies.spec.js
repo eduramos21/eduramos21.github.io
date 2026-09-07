@@ -4,17 +4,21 @@ const CASE_STUDIES = [
   'work/toolshop-contract.html',
   'work/toolshop-checkout.html',
   'work/toolshop-selection.html',
+  'work/llm-determinism.html',
 ];
 
 test.describe('case studies', () => {
+  // Every page under work/ has to be reachable from the landing page, and the landing page
+  // must not link to one that does not exist. Asserted across the whole page rather than one
+  // section, so a case study added to a new section is still covered.
   test('the landing page links to every case study, and to no others', async ({ page }) => {
     await page.goto('/');
 
-    const hrefs = await page
-      .locator('#work .cards a')
+    const linked = await page
+      .locator('main a[href^="work/"]')
       .evaluateAll((links) => links.map((link) => link.getAttribute('href')));
 
-    expect(hrefs.sort()).toEqual([...CASE_STUDIES].sort());
+    expect([...new Set(linked)].sort()).toEqual([...CASE_STUDIES].sort());
   });
 
   for (const path of CASE_STUDIES) {
@@ -29,17 +33,27 @@ test.describe('case studies', () => {
 
       const back = page.locator('.case__back a');
       await expect(back).toBeVisible();
+      await expect(back).toHaveAttribute('href', /^\.\.\/index\.html#/);
 
       await back.click();
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Eduardo\s+Ramos/);
     });
 
-    test(`${path} links to its decision record`, async ({ page }) => {
+    test(`${path} states its context up front`, async ({ page }) => {
       await page.goto(path);
 
-      const adr = page.locator('.case__facts a[href*="/docs/adr/"]');
-      await expect(adr).toHaveCount(1);
-      await expect(adr).toHaveAttribute('href', /toolshop-automation/);
+      // Every case study opens with a facts block. The toolshop ones cite the decision
+      // record they came from; the determinism one has no public repository to cite,
+      // because that work is closed source.
+      const facts = page.locator('.case__facts');
+      await expect(facts).toBeVisible();
+      expect(await facts.locator('dt').count()).toBeGreaterThanOrEqual(3);
+
+      if (path.startsWith('work/toolshop-')) {
+        const adr = facts.locator('a[href*="/docs/adr/"]');
+        await expect(adr).toHaveCount(1);
+        await expect(adr).toHaveAttribute('href', /toolshop-automation/);
+      }
     });
   }
 

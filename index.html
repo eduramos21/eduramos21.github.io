@@ -40,6 +40,7 @@
       <li><a href="#expertise">Expertise</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#work">Work</a></li>
+      <li><a href="#ai-quality">AI Quality</a></li>
       <li><a href="#qa-lab">QA Lab</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -319,6 +320,94 @@
       fixed one both fail the build; and the same bytecode runs against local Docker, CI and
       the hosted deployment with only configuration changing.
     </p>
+  </section>
+
+  <section class="section" id="ai-quality">
+    <h2>Testing generative AI</h2>
+    <p class="section__lede">
+      A feature backed by a language model has no expected output. Part of what it returns is
+      random and part of it is prose, so an equality assertion is too strict and impossible at
+      the same time. I built a framework for testing that kind of feature anyway — by
+      measuring whether the output stays inside bounds I can write down, rather than whether
+      it matches a string.
+    </p>
+
+    <ol class="pipeline">
+      <li>
+        <h3>A fixture goes in</h3>
+        <p>
+          One fixed input, and next to it the criteria describing what a good answer to
+          <em>that</em> input looks like. Criteria belong to the input, not to the field.
+        </p>
+      </li>
+      <li>
+        <h3>The API test posts it to the workflow</h3>
+        <p>
+          Same request, five times, unchanged. One call to a random system proves nothing.
+        </p>
+      </li>
+      <li>
+        <h3>The AI workflow answers, five times</h3>
+        <p>
+          The feature under test — prompt, model, structured output — returns a parsed result
+          per run.
+        </p>
+      </li>
+      <li>
+        <h3>Every field gets the check it deserves</h3>
+        <p>
+          Fields computed by code get an ordinary assertion. Fields the model picks from a
+          known universe get a membership check. Promises the prompt makes between fields —
+          “if you left the part empty you must ask a follow-up question” — get a cross-field
+          invariant. Those cost nothing to run and catch the worst failure: the model
+          inventing certainty it does not have.
+        </p>
+      </li>
+      <li>
+        <h3>The prose goes to a judge, behind an interface</h3>
+        <p>
+          A second workflow, its own credential, temperature 0, answering pass or fail with a
+          reason. It grades one field, and separately grades the whole output against the
+          original input for faithfulness. A judge that cannot answer is a loud failure of
+          the run — never a fabricated “fail”, because “the output is bad” and “we could not
+          ask” are different facts.
+        </p>
+      </li>
+      <li>
+        <h3>The report shows every rule that ran</h3>
+        <p>
+          Actual against allowed, passes printed alongside failures. With a dozen rules in
+          play, knowing which ones held is what makes a failure interpretable.
+        </p>
+      </li>
+      <li>
+        <h3>One metrics row per build records the drift</h3>
+        <p>
+          How often the runs disagreed with each other, the judge pass rate, and the value
+          distribution — tagged with the model id and the prompt version, so drift can be
+          attributed to a model change or a prompt change instead of guessed at. Red or green
+          tells you about today; the trend tells you which change caused it.
+        </p>
+      </li>
+    </ol>
+
+    <p class="prose">
+      It runs nightly, never blocks a merge, and has retries switched off — retrying a
+      determinism failure would erase the variance the suite exists to measure. It caught a
+      real output-quality regression while it was still being built.
+    </p>
+
+    <ul class="cards cards--single">
+      <li class="card">
+        <h3><a href="work/llm-determinism.html">The full write-up</a></h3>
+        <p>
+          The four kinds of output field and the rule each one gets, why the judge is a
+          separate service, how to write criteria an evaluator model actually follows, what
+          the metrics row records, and what is deliberately unfinished.
+        </p>
+        <p class="card__stat"><span>1 regression</span> caught before release</p>
+      </li>
+    </ul>
   </section>
 
   <section class="section" id="qa-lab">

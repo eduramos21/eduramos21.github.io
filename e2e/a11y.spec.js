@@ -6,6 +6,7 @@ const PAGES = [
   'work/toolshop-contract.html',
   'work/toolshop-checkout.html',
   'work/toolshop-selection.html',
+  'work/llm-determinism.html',
   '404.html',
 ];
 

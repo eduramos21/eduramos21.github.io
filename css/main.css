@@ -459,6 +459,70 @@ code {
   font-weight: 600;
 }
 
+.cards--single { grid-template-columns: 1fr; max-width: var(--measure); }
+
+/* ---------------------------------------------------------------- pipeline */
+
+/* A real sequence, so the steps are numbered. The counter is on the list, not
+   typed into the content. */
+.pipeline {
+  counter-reset: step;
+  border-left: 1px solid var(--border);
+  margin-bottom: var(--space-12);
+}
+
+.pipeline > li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 var(--space-8) var(--space-8);
+  max-width: calc(var(--measure) + var(--space-8));
+}
+.pipeline > li:last-child { padding-bottom: 0; }
+
+.pipeline > li::before {
+  content: counter(step);
+  position: absolute;
+  left: -0.8125rem;
+  top: 0.2rem;
+  width: 1.625rem;
+  height: 1.625rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.pipeline h3 {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+.pipeline p { color: var(--muted); font-size: var(--fs-small); }
+
+/* ------------------------------------------------------- prose extras */
+
+.quote {
+  margin: var(--space-6) 0;
+  padding: var(--space-4) var(--space-6);
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+.quote strong { color: var(--text); }
+
+.numbered {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  color: var(--muted);
+}
+.numbered li + li { margin-top: var(--space-2); }
+.numbered::marker { font-family: var(--font-mono); }
+
 /* -------------------------------------------------------------- qa lab */
 
 .lab__table {
