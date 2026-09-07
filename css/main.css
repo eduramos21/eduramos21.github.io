@@ -606,11 +606,13 @@ code {
   font-size: inherit;
 }
 
+/* Anything that scrolls sideways needs `tabindex="0"` on this wrapper, or a
+   keyboard user cannot reach the part that is off-screen. */
+.scroll-x { overflow-x: auto; }
+
 .case__table {
   font-size: var(--fs-small);
   border: 1px solid var(--border);
-  display: block;
-  overflow-x: auto;
   white-space: nowrap;
 }
 .case__table th[scope="col"] {

@@ -60,7 +60,14 @@ test.describe('accessibility', () => {
     });
   }
 
-  test('keyboard focus is visible, not suppressed', async ({ page }) => {
+  test('keyboard focus is visible, not suppressed', async ({ page, browserName }) => {
+    test.skip(
+      browserName === 'webkit',
+      'WebKit moves focus to links with Tab only when the Safari preference '
+      + '"press Tab to highlight each item" is on, and the iPhone profile has no '
+      + 'keyboard at all. Tab order is asserted in Chromium.',
+    );
+
     await page.goto('/');
     await page.keyboard.press('Tab');
 
