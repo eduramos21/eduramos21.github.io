@@ -24,35 +24,42 @@
     });
   }
 
-  // ponytail: highlight the section nearest the top of the viewport. Cheaper and
-  // steadier than tracking scroll position, and it needs no rAF throttling.
-  var links = menu ? Array.from(menu.querySelectorAll('a[href^="#"]')) : [];
+  var links = menu ? Array.prototype.slice.call(menu.querySelectorAll('a[href^="#"]')) : [];
   var sections = links
     .map(function (link) { return document.querySelector(link.getAttribute('href')); })
     .filter(Boolean);
 
-  if (!sections.length || !('IntersectionObserver' in window)) return;
+  if (!sections.length) return;
 
-  var visible = new Map();
+  // The trigger line sits just below the sticky header. The current section is the
+  // last one whose top has crossed it — which is why this is geometry rather than
+  // an IntersectionObserver band: the last section on the page can never reach the
+  // middle of the viewport, because the page runs out of scroll first.
+  var TRIGGER = 96;
 
   function paint() {
     var current = null;
+
     sections.forEach(function (section) {
-      if (visible.get(section)) current = current || section;
+      if (section.getBoundingClientRect().top <= TRIGGER) current = section;
     });
+
+    // At the bottom of the page the final section is the one being read, whatever
+    // its top edge says.
+    var bottom = window.innerHeight + window.pageYOffset >=
+      document.documentElement.scrollHeight - 2;
+    if (bottom) current = sections[sections.length - 1];
+
     links.forEach(function (link) {
-      var match = current && link.getAttribute('href') === '#' + current.id;
-      if (match) link.setAttribute('aria-current', 'true');
-      else link.removeAttribute('aria-current');
+      if (current && link.getAttribute('href') === '#' + current.id) {
+        link.setAttribute('aria-current', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
   }
 
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      visible.set(entry.target, entry.isIntersecting);
-    });
-    paint();
-  }, { rootMargin: '-20% 0px -70% 0px' });
-
-  sections.forEach(function (section) { observer.observe(section); });
+  window.addEventListener('scroll', paint, { passive: true });
+  window.addEventListener('resize', paint, { passive: true });
+  paint();
 })();
