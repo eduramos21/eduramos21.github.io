@@ -459,7 +459,7 @@ code {
   font-weight: 600;
 }
 
-.cards--single { grid-template-columns: 1fr; max-width: var(--measure); }
+.section__cta { margin-top: var(--space-8); }
 
 /* ---------------------------------------------------------------- pipeline */
 
