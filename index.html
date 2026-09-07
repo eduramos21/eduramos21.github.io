@@ -73,7 +73,7 @@
     <h2>About</h2>
     <div class="prose">
       <p>
-        I have spent thirteen years in software quality, the last seven of them remote.
+        I have spent 13 years in software quality, the last seven of them remote.
         Most of that time has gone into the same problem from different angles: how do you
         get a test suite to tell you something true about the product, on the day you need
         to know it, without a person having to remember anything.
@@ -183,70 +183,127 @@
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>roadsurfer</h3>
-          <p class="timeline__when">2025-present</p>
+          <span>Remote, Spain</span>
         </div>
-        <p class="timeline__role">QA Test Automation Engineer · remote, Spain</p>
-        <p>
-          I design and maintain UI automation in Playwright with Java and API tests in REST
-          Assured, inside a Gradle multi-module framework, covering booking, back-office
-          operations, user accounts, subscriptions and sales for a platform running in
-          around 100 locations across 16 countries. I own the nightly Jenkins regression triage: reproducing against staging, separating real product defects from test
-          decay, and gating coverage for unreleased features rather than leaving a tolerated
-          red build. I also built a reusable determinism module for generative-AI features
-          whose output cannot be exact-matched: it replays fixture scenarios, scores
-          structured and free-text responses with an LLM-as-judge against per-fixture
-          criteria, and records per-field drift and judge pass rate per build, tagged by
-          model and workflow version, so a regression can be attributed to a model or a
-          prompt change.
+        <p class="timeline__role">
+          QA Test Automation Engineer
+          <span>2025-Present</span>
         </p>
+        <ul class="timeline__points">
+          <li>
+            Design and maintain UI automation in Playwright with Java and API tests in REST
+            Assured inside a central Gradle multi-module framework (Spring Boot, JUnit 5,
+            Allure), covering booking, back-office operations, user accounts, subscriptions
+            and sales for a platform running in around 100 locations across 16 countries;
+            also maintain legacy Selenium suites.
+          </li>
+          <li>
+            Built a reusable determinism test module for generative-AI features whose outputs
+            cannot be exact-matched: it replays fixture scenarios through an AI classification
+            workflow, scores structured and free-text responses with an LLM-as-judge against
+            per-fixture criteria, and records per-field drift rate, enum distribution and
+            judge pass rate per build, tagged by model and workflow version so a regression
+            can be attributed to a model or a prompt change.
+          </li>
+          <li>
+            Own nightly Jenkins regression triage: reproduce against staging and feature
+            environments, separate real product defects from test decay, raise and classify
+            defects in JIRA, validate redesigned flows before release, and gate coverage for
+            unreleased features instead of leaving red builds.
+          </li>
+          <li>
+            Validate behaviour across UI, API and database together, combining REST Assured
+            helpers against backend services with SQL queries confirming persisted state
+            matches what the UI shows, including flows that carry customer personal data.
+          </li>
+          <li>
+            Improved failure diagnosis so debugging is not archaeology: Playwright traces
+            captured into Allure for inline, shareable reports. Write Given/When/Then
+            specifications for stakeholders, review teammates' pull requests, and author the
+            internal skills that standardise handovers, pull requests and code review across
+            QA.
+          </li>
+        </ul>
       </li>
 
       <li class="timeline__item">
         <div class="timeline__head">
-          <h3>Fleksy</h3>
-          <p class="timeline__when">2022-2025</p>
+          <h3>Fleksy (keyboard SDK)</h3>
+          <span>Remote, Spain</span>
         </div>
-        <p class="timeline__role">QA Engineer, keyboard SDK · remote, Spain</p>
-        <p>
-          Designed and maintained automated UI and API suites with Selenium in Java, Kotlin
-          and Python for new and existing SDK features. Built smoke, sanity, functional,
-          regression and usability workflows across browsers and on iOS and Android devices,
-          and read user stories and requirements to find quality risks before writing any
-          automation for them.
+        <p class="timeline__role">
+          QA Engineer
+          <span>2022-2025</span>
         </p>
+        <ul class="timeline__points">
+          <li>
+            Designed, developed and maintained automated UI and API test suites with Selenium
+            in Java, Kotlin and Python for new and existing SDK features.
+          </li>
+          <li>
+            Built workflows and suites for smoke, sanity, functional, regression and usability
+            testing across browsers and on iOS and Android devices, analysing user stories and
+            requirements to find quality risks ahead of automation.
+          </li>
+          <li>
+            Prepared and maintained test cases from user stories throughout development, wrote
+            detailed test summary reports, and coordinated with stakeholders on testability
+            and test infrastructure.
+          </li>
+        </ul>
       </li>
 
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>Interaction Design Foundation</h3>
-          <p class="timeline__when">2018-2022</p>
+          <span>Remote</span>
         </div>
-        <p class="timeline__role">Software Tester, Product Operations · remote</p>
-        <p>
-          Led software testing strategy for an online learning platform used by 1,576
-          companies with over 1.1 million course enrolments, and established the testing
-          practice for a product team that had no dedicated QA function. Mentored staff day
-          to day, turned product feedback into actionable items for the development team, and
-          ran functional and usability testing across member-facing and internal systems.
+        <p class="timeline__role">
+          Software Tester, Product Operations
+          <span>2018-2022</span>
         </p>
+        <ul class="timeline__points">
+          <li>
+            Led software testing strategy for an online learning platform used by 1,576
+            companies with over 1.1 million course enrolments, establishing the testing
+            practice for a product team with no dedicated QA function.
+          </li>
+          <li>
+            Mentored staff day to day, turned product feedback into actionable items for the
+            development team, and ran functional and usability testing across member-facing
+            and internal systems.
+          </li>
+        </ul>
       </li>
 
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>Sitio Uno</h3>
-          <p class="timeline__when">2013-2021</p>
+          <span>Caracas, Venezuela (remote from 2018)</span>
         </div>
-        <p class="timeline__role">QA Manager, then QA Consultant · Caracas, Venezuela (remote from 2018)</p>
-        <p>
-          Led certification of payment software with FirstData/Fiserv over roughly two years,
-          covering EMV payment technology and the PCI PA-DSS security standard across
-          combined hardware and software, and handled version control of the application, its
-          releases and the test evidence submitted for certification. Directed two technical
-          writers through the twenty-odd implementation guides and certification documents
-          the standard required, and built the test plans, product requirements and customer
-          support plans for an agile team from scratch. Two EMV projects reached over 100,000
-          users in their first two years.
+        <p class="timeline__role">
+          QA Manager (2013-2018), then QA Consultant
+          <span>2013-2021</span>
         </p>
+        <ul class="timeline__points">
+          <li>
+            Led certification of payment software with FirstData/Fiserv over roughly two
+            years, covering EMV payment technology and the PCI PA-DSS security standard across
+            combined hardware and software, and handled version control of the application,
+            its releases and the test evidence submitted for certification.
+          </li>
+          <li>
+            Directed two technical writers through the 20+ implementation guides and
+            certification documents the standard required, and built the test plans, product
+            requirements and customer support plans for an agile team from scratch.
+          </li>
+          <li>
+            Led QA for payment software, point-of-sale hardware and payment reporting
+            applications; two EMV projects reached over 100,000 users in their first two
+            years. Retained part-time as QA Consultant from 2018, advising on the platform and
+            its certification work until November 2021.
+          </li>
+        </ul>
       </li>
 
     </ol>

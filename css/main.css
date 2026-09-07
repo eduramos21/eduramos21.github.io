@@ -376,19 +376,21 @@ code {
   border-color: var(--accent);
 }
 
-.timeline__head {
+/* Company and location on one line, role and dates on the next, then the bullets. */
+.timeline__head,
+.timeline__role {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
 }
+
 .timeline__head h3 {
   font-size: var(--fs-h3);
   font-weight: 700;
 }
-.timeline__when {
-  font-family: var(--font-mono);
+.timeline__head span {
   font-size: var(--fs-small);
   color: var(--muted);
 }
@@ -396,13 +398,23 @@ code {
 .timeline__role {
   font-size: var(--fs-small);
   color: var(--accent);
-  margin-bottom: var(--space-3);
+  margin-top: var(--space-1);
+}
+.timeline__role span {
+  font-family: var(--font-mono);
+  color: var(--muted);
 }
 
-.timeline__item > p:last-child {
-  color: var(--muted);
+.timeline__points {
+  margin-top: var(--space-4);
   max-width: var(--measure);
+  list-style: disc;
+  padding-left: 1.125rem;
+  color: var(--muted);
+  font-size: var(--fs-small);
 }
+.timeline__points li + li { margin-top: var(--space-3); }
+.timeline__points::marker { color: var(--border); }
 
 .sidenote {
   margin-top: var(--space-16);
@@ -461,12 +473,12 @@ code {
 
 /* ------------------------------------------------------------- ai quality */
 
-.section h3 {
+#ai-quality h3 {
   font-size: var(--fs-h3);
   font-weight: 700;
   margin: var(--space-12) 0 var(--space-3);
 }
-.section h3:first-of-type { margin-top: var(--space-8); }
+#ai-quality h3:first-of-type { margin-top: var(--space-8); }
 
 .ai__para {
   max-width: var(--measure);
