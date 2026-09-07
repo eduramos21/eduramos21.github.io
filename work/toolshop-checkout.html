@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One purchase, four layers — Eduardo Ramos</title>
+<title>One purchase, four layers · Eduardo Ramos</title>
 <meta name="description" content="A checkout followed through API, UI, database and mailbox. It caught a defect where one press of finish shows payment success and creates no order.">
 <!-- meta -->
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -54,7 +54,7 @@
     <p>
       A checkout is the one flow where every layer can lie independently. The page can say
       the payment worked, the API can answer 201, the invoice row can be missing, and the
-      customer can get no email — in any combination. A suite that only drives the UI will
+      customer can get no email, in any combination. A suite that only drives the UI will
       report on the first of those and nothing else.
     </p>
 
@@ -67,7 +67,7 @@ mail     the confirmation the customer actually received</code></pre>
     <p>
       The setup happens through the application's own API rather than by seeding the
       database, so the test never depends on a schema it does not own. The assertions then
-      go the other way — down to SQL and to the mailbox — because that is where the evidence
+      go the other way, down to SQL and to the mailbox, because that is where the evidence
       is that something was really persisted and really sent.
     </p>
 
@@ -90,7 +90,7 @@ mail     the confirmation the customer actually received</code></pre>
     </p>
     <p>
       The user-visible half is what makes it worth its own test. The success message appears
-      on the first click, so the page reports success while nothing was ordered — and the
+      on the first click, so the page reports success while nothing was ordered, and the
       invoice call's error handler is empty, so a genuine failure would look exactly the
       same. <strong>A suite that asserted on the payment message would have reported this as
       passing.</strong>
@@ -100,14 +100,14 @@ mail     the confirmation the customer actually received</code></pre>
     <p>
       The application is third-party here, so I cannot fix it in this repository. That left
       two options: assert the broken behaviour, which turns a defect into a requirement and
-      means the suite goes red the day it is fixed — or say what should happen and mark it
+      means the suite goes red the day it is fixed, or say what should happen and mark it
       known.
     </p>
     <p>
       <code>@Quarantine</code> is that mark. It is excluded from the blocking run, kept
       visible, and run on a schedule so its status stays observable. It is not a retry, and
-      nothing about it is hidden. The rest of the slice — invoice row, invoice line,
-      confirmation email — is still verified by driving the application the way it actually
+      nothing about it is hidden. The rest of the slice, meaning the invoice row, the
+      invoice line and the confirmation email, is still verified by driving the application the way it actually
       behaves, in exactly one documented place.
     </p>
 
@@ -117,7 +117,7 @@ mail     the confirmation the customer actually received</code></pre>
       test set by hand at the end of its body, read by an <code>@AfterEach</code> that
       attached a screenshot when the value was anything else. There were 258 call sites.
       About fifteen were missing or wrong, so those tests attached a screenshot on every
-      passing run — and the failures that most needed evidence had none.
+      passing run, and the failures that most needed evidence had none.
     </p>
     <p>
       A convention applied 258 times is a convention that is applied 243 times. The fix is

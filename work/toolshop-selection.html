@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A selection that runs nothing must fail — Eduardo Ramos</title>
+<title>A selection that runs nothing must fail · Eduardo Ramos</title>
 <meta name="description" content="Thirteen tags as annotations so a typo will not compile, plus one guard that fails any run whose tag expression matched zero tests. Gradle's own guard does not cover it.">
 <!-- meta -->
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -44,7 +44,7 @@
 
   <dl class="case__facts">
     <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a></dd></div>
-    <div><dt>Layer</dt><dd>Build and execution — Gradle 9.7.1, JUnit 6.1.3</dd></div>
+    <div><dt>Layer</dt><dd>Build and execution, on Gradle 9.7.1 and JUnit 6.1.3</dd></div>
     <div><dt>Decision record</dt><dd><a href="https://github.com/eduramos21/toolshop-automation/blob/main/docs/adr/0003-empty-test-selection-must-fail.md" target="_blank" rel="noopener">ADR 0003</a></dd></div>
   </dl>
 
@@ -67,8 +67,7 @@
     <h2>The assumption that was wrong</h2>
     <p>
       I planned on Gradle 9's <code>failOnNoDiscoveredTests</code>, which defaults to true.
-      The upgrade guide's wording — “test sources are present, but no test was selected for
-      execution” — reads exactly like it covers this. So I measured it, on a module with one
+      The upgrade guide's wording, “test sources are present, but no test was selected for execution”, reads exactly like it covers this. So I measured it, on a module with one
       passing test:
     </p>
 
@@ -87,14 +86,14 @@
 
     <p>
       Neither property fires. JUnit tag filtering is a <em>post-discovery</em> filter: the
-      test class is discovered, then removed. “No tests discovered” is therefore false — one
+      test class is discovered, then removed. “No tests discovered” is therefore false. One
       was discovered and zero were executed, and Gradle's guard only covers the discovery
       stage. <code>filter.isFailOnNoMatchingTests</code> is a different mechanism entirely;
       it governs Gradle's own <code>--tests</code> patterns, not JUnit Platform filters.
     </p>
     <p>
-      Both properties stay set anyway — they cost nothing and they do catch
-      <code>--tests</code> typos — with a comment pointing at the decision record, so nobody
+      Both properties stay set anyway, because they cost nothing and they do catch
+      <code>--tests</code> typos, with a comment pointing at the decision record, so nobody
       re-derives the wrong conclusion from their names.
     </p>
 
@@ -132,7 +131,7 @@
       <li>
         Its failure message lists the tag vocabulary by reading the annotation file names in
         the core module, so the build holds no second copy of the list to drift out of date.
-        A test keeps a file name and the tag it declares in step — without it, that message
+        A test keeps a file name and the tag it declares in step. Without it, that message
         could go quietly stale, which is the same class of bug one level up.
       </li>
     </ul>
@@ -149,7 +148,7 @@
       the graph, so their result directories keep XML from an earlier run and get counted.
       The exact guarantee holds for any invocation where the test tasks actually run, which is
       every form CI and the entry script use. Closing it properly needs per-task
-      participation through a build service — more machinery than the case is worth.
+      participation through a build service, which is more machinery than the case is worth.
     </p>
     <p>
       And <code>-Ptags=quarantine</code> finding nothing is good news, but the guard fails it,
@@ -161,8 +160,8 @@
     <h2>What it verifies</h2>
     <p>
       <code>./gradlew test -Ptags=doesnotexist</code> fails, and
-      <code>./gradlew test -Ptags='smoke &amp; admin'</code> — a valid expression that matches
-      nothing — fails too. That now tests my own guard rather than an assumed Gradle
+      <code>./gradlew test -Ptags='smoke &amp; admin'</code>, a valid expression that matches
+      nothing, fails too. That now tests my own guard rather than an assumed Gradle
       behaviour. Without it the whole tagging scheme is decorative, because a mistyped tag
       produces the exact silent-green outcome the tagging exists to prevent.
     </p>

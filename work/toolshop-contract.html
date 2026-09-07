@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contract validation nobody can skip — Eduardo Ramos</title>
+<title>Contract validation nobody can skip · Eduardo Ramos</title>
 <meta name="description" content="I moved OpenAPI validation onto the shared request specification so no test can opt out. It failed 28 of 41 tests from thirteen distinct disagreements.">
 <!-- meta -->
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -44,7 +44,7 @@
 
   <dl class="case__facts">
     <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a></dd></div>
-    <div><dt>Layer</dt><dd>API — REST Assured, Java 21</dd></div>
+    <div><dt>Layer</dt><dd>API, using REST Assured and Java 21</dd></div>
     <div><dt>Decision record</dt><dd><a href="https://github.com/eduramos21/toolshop-automation/blob/main/docs/adr/0007-contract-validation-runs-on-every-call.md" target="_blank" rel="noopener">ADR 0007</a></dd></div>
   </dl>
 
@@ -100,15 +100,13 @@
       <code>content</code> and <code>requestBody</code> as unexpected on every operation in
       the file. Setting the version to 3.1.0 left exactly one complaint: seven paths declare
       a <code>query</code> operation. <code>QUERY</code> is a real HTTP method that OpenAPI
-      3.2 added, and the application really does use it — the storefront sends
-      <code>QUERY /products</code> — so this is a genuine 3.2 document, not a mislabelled
+      3.2 added, and the application really does use it, since the storefront sends <code>QUERY /products</code>, so this is a genuine 3.2 document, not a mislabelled
       one.
     </p>
     <p>
       The document is therefore normalised in two ways and no others: the version is set to
       3.1.0, and the <code>query</code> operation is removed from the seven paths that have
-      one. Both are removals of things the suite does not exercise — <code>/products</code>
-      keeps its <code>get</code>, which is the operation the suite calls. A test asserts
+      one. Both are removals of things the suite does not exercise. <code>/products</code> keeps its <code>get</code>, which is the operation the suite calls. A test asserts
       exactly which operations were dropped, so the cost of the normalising cannot grow
       unnoticed.
     </p>

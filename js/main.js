@@ -32,7 +32,7 @@
   if (!sections.length) return;
 
   // The trigger line sits just below the sticky header. The current section is the
-  // last one whose top has crossed it — which is why this is geometry rather than
+  // last one whose top has crossed it, which is why this is geometry rather than
   // an IntersectionObserver band: the last section on the page can never reach the
   // middle of the viewport, because the page runs out of scroll first.
   var TRIGGER = 96;

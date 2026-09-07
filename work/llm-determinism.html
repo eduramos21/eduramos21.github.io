@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Testing an LLM feature for determinism — Eduardo Ramos</title>
+<title>Testing an LLM feature for determinism · Eduardo Ramos</title>
 <meta name="description" content="How I test a generative-AI feature whose output cannot be exact-matched: replay a fixed input N times, give every field the check it deserves, and delegate prose to an LLM judge behind an interface.">
 <!-- meta -->
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -64,7 +64,7 @@
     <h2>Why ordinary assertions do not work here</h2>
     <p>
       Take a feature that turns a free-text report typed by a member of staff into a
-      structured record — a category, a part, a size, a severity, a human-readable summary,
+      structured record: a category, a part, a size, a severity, a human-readable summary,
       and a follow-up question when something was unclear. The obvious test is
       <code>assertEquals("Scratch", response.damageType())</code>. That assertion is wrong
       in two different ways at once.
@@ -91,7 +91,7 @@
         <tr><th scope="col">Kind of field</th><th scope="col">What it is</th><th scope="col">How it is checked</th></tr>
       </thead>
       <tbody>
-        <tr><td>Deterministic</td><td>computed by code, not the model — a table lookup, a join</td><td>an ordinary assertion, or out of scope entirely</td></tr>
+        <tr><td>Deterministic</td><td>computed by code, not the model: a table lookup, a join</td><td>an ordinary assertion, or out of scope entirely</td></tr>
         <tr><td>Bounded-stochastic</td><td>the model picks, but only from a known universe</td><td>membership in an allowed set</td></tr>
         <tr><td>Structural</td><td>relationships between fields the prompt promises to hold</td><td>a cross-field invariant</td></tr>
         <tr><td>Free text</td><td>prose the model writes</td><td>an LLM judge, against criteria written for that input</td></tr>
@@ -128,7 +128,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
 
     <p>
       Two details in that loop carry more weight than they look. <strong>Reporting happens in
-      a <code>finally</code> block</strong> — if the endpoint or the judge throws halfway
+      a <code>finally</code> block</strong>. If the endpoint or the judge throws halfway
       through, the test still attaches everything it captured and still writes a metrics row
       saying so. A crashed run is data, not a black hole. And <strong>the assertion message
       is the report</strong>, passed as a lazy supplier, so a failing build's console shows
@@ -142,24 +142,24 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     </p>
     <ul>
       <li>
-        <strong>Allowed set</strong> — this field's value must be in this set. The set is
+        <strong>Allowed set.</strong> This field's value must be in this set. The set is
         either an enum copied from the model's own prompt, or one exported from the data the
         workflow reads. It has a <code>blank is allowed</code> variant, for a specific and
         important pattern described below.
       </li>
       <li>
-        <strong>Cross-field invariant</strong> — a plain predicate supplied by the caller,
+        <strong>Cross-field invariant.</strong> A plain predicate supplied by the caller,
         so the framework never learns what any particular field means.
       </li>
       <li>
-        <strong>LLM judge</strong> — pull out some text, hand it and the criteria to a judge,
+        <strong>LLM judge.</strong> Pull out some text, hand it and the criteria to a judge,
         fail the run if the verdict is not a pass.
       </li>
     </ul>
 
     <h3>The cheapest rules catch the worst failure</h3>
     <p>
-      The invariants are the highest-value rules in the suite and they cost nothing to run —
+      The invariants are the highest-value rules in the suite and they cost nothing to run:
       no model, no network. They encode the promises the prompt makes:
     </p>
     <ul>
@@ -172,7 +172,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
       All four are the same shape, and they catch the failure mode that matters most here:
       <strong>the model inventing certainty it does not have.</strong> That is also what the
       <em>blank is allowed</em> variant is for. Some fields may legitimately be left empty
-      when the model does not know — <em>provided</em> it asks. “Empty is fine here, but a
+      when the model does not know, <em>provided</em> it asks. “Empty is fine here, but a
       non-empty value must still be in the set” is the membership half; the obligation to
       actually ask is enforced separately, by the invariant.
     </p>
@@ -188,7 +188,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     <ul>
       <li>
         <strong>No model credential in the test repository.</strong> It lives in the
-        workflow. The tests hold a URL and a shared secret — nothing that can bill or leak a
+        workflow. The tests hold a URL and a shared secret, nothing that can bill or leak a
         model account.
       </li>
       <li>
@@ -215,7 +215,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     </p>
     <p>
       “The model says this output is bad” and “we could not ask the model” are different
-      facts. Collapsing them into one red result destroys the signal — a judge outage would
+      facts. Collapsing them into one red result destroys the signal. A judge outage would
       look exactly like a total collapse in quality, which is the one moment you most need to
       tell them apart. A malformed verdict becomes <em>we could not get an opinion</em>,
       never a silent failure.
@@ -223,7 +223,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
 
     <h2>Fixtures cover qualities of input, not examples</h2>
     <p>
-      Five fixtures. The spread is what makes the suite meaningful, not the count — each one
+      Five fixtures. The spread is what makes the suite meaningful, not the count. Each one
       probes a different <em>kind</em> of input:
     </p>
 
@@ -234,10 +234,10 @@ metrics row        one line per fixture per build: drift, judge pass rate,
       </thead>
       <tbody>
         <tr><td>complete and unambiguous</td><td>the happy path</td></tr>
-        <tr><td>partial</td><td>the part is clear, the side and size are not — does it assume, and does it then ask?</td></tr>
+        <tr><td>partial</td><td>the part is clear, the side and size are not. Does it assume, and does it then ask?</td></tr>
         <tr><td>vague</td><td>does the model fabricate specifics it was never given?</td></tr>
         <tr><td>nonsense</td><td>does it classify something that is not a report at all?</td></tr>
-        <tr><td>adversarial</td><td>the input is a complaint about a person, not a description of a thing — does the model launder someone's opinion into an official record?</td></tr>
+        <tr><td>adversarial</td><td>the input is a complaint about a person, not a description of a thing. Does the model launder someone's opinion into an official record?</td></tr>
       </tbody>
     </table>
     </div>
@@ -254,7 +254,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     <blockquote class="quote">
       The <strong>ONLY</strong> thing prohibited: character judgements, opinions, or
       recommendations about the customer (for example “should be banned”, “irresponsible”).
-      Anything else <strong>PASSES</strong> — stating damage facts, noting that no specific
+      Anything else <strong>PASSES</strong>: stating damage facts, noting that no specific
       damage was identified, factually attributing responsibility, or noting that the input
       only concerns behaviour rather than damage. Fail <strong>ONLY</strong> if an opinion,
       judgement, or recommendation is present.
@@ -285,9 +285,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
       The judge gets used at two levels. <strong>Field level</strong> grades one prose field
       against criteria about that field. <strong>Whole-output faithfulness</strong> hands it
       the input <em>plus</em> the entire serialised output and asks whether the classification
-      is faithful to what the person actually wrote. That second one catches contradictions no
-      per-field rule can see — a perfectly valid part identifier that is simply the wrong
-      part.
+      is faithful to what the person actually wrote. That second one catches contradictions no per-field rule can see, such as a perfectly valid part identifier that is simply the wrong part.
     </p>
 
     <h2>What the report says</h2>
@@ -328,7 +326,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
 }</code></pre>
     <p>
       <strong>Drift rate</strong> is the share of runs that disagreed with the most common
-      value — <code>0.0</code> means all runs agreed. A missing value is still a data point,
+      value. <code>0.0</code> means all runs agreed. A missing value is still a data point,
       counted rather than dropped, because “the model returned nothing” is exactly the kind of
       drift you want to see.
     </p>
@@ -370,7 +368,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     <p>
       It found a genuine output-quality regression while it was still being built, which is
       the only endorsement a suite like this can honestly claim. The framework module itself
-      has zero production dependencies — it cannot reach the network — and its own unit tests
+      has zero production dependencies, so it cannot reach the network, and its own unit tests
       run offline against a stub judge.
     </p>
 
@@ -379,9 +377,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
     <ul>
       <li>
         <strong>No cross-run rule.</strong> Every rule shipped judges runs in isolation.
-        Run-to-run disagreement is measured but never fails the build. The seam is in place —
-        rules already receive all the runs, and a run-set-wide violation already has a
-        representation — and it stays unused on purpose. You watch the trend before deciding
+        Run-to-run disagreement is measured but never fails the build. The seam is in place, because rules already receive all the runs and a run-set-wide violation already has a representation, and it stays unused on purpose. You watch the trend before deciding
         what threshold deserves a red build.
       </li>
       <li>
@@ -389,8 +385,7 @@ metrics row        one line per fixture per build: drift, judge pass rate,
         failing. Two sets live in data tables of hundreds of rows; until they are exported,
         the enum, invariant and judge rules still run. Without that, an unexportable table
         would block the entire suite. The matching operational note is that a false failure on
-        one of those usually means the export is stale, not that the model drifted — refresh
-        it before investigating the model.
+        one of those usually means the export is stale, not that the model drifted. Refresh it before investigating the model.
       </li>
       <li>
         <strong>Model and prompt attribution depend on the feature workflow emitting them,</strong>

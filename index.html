@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eduardo Ramos — QA Test Automation Engineer</title>
+<title>Eduardo Ramos, QA Test Automation Engineer</title>
 <meta name="description" content="QA test automation engineer, 13 years in software quality. I design and own automated test frameworks rather than only add cases to them.">
 <!-- meta -->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://eduramos21.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Eduardo Ramos">
-<meta property="og:title" content="Eduardo Ramos — QA Test Automation Engineer">
+<meta property="og:title" content="Eduardo Ramos, QA Test Automation Engineer">
 <meta property="og:description" content="QA test automation engineer, 13 years in software quality. I design and own automated test frameworks rather than only add cases to them.">
 <meta property="og:url" content="https://eduramos21.github.io/">
 <meta property="og:image" content="https://eduramos21.github.io/assets/img/og-image.png">
@@ -18,7 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Eduardo Ramos, QA Test Automation Engineer">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Eduardo Ramos — QA Test Automation Engineer">
+<meta name="twitter:title" content="Eduardo Ramos, QA Test Automation Engineer">
 <meta name="twitter:description" content="QA test automation engineer, 13 years in software quality. I design and own automated test frameworks rather than only add cases to them.">
 <meta name="twitter:image" content="https://eduramos21.github.io/assets/img/og-image.png">
 <!-- /meta -->
@@ -79,9 +79,7 @@
         to know it, without a person having to remember anything.
       </p>
       <p>
-        At the moment that means a Gradle multi-module framework in Java — Playwright for
-        the UI, REST Assured for the API, SQL for what actually got persisted — and a
-        determinism module for generative-AI output that cannot be exact-matched. Before
+        At the moment that means a Gradle multi-module framework in Java, with Playwright for the UI, REST Assured for the API and SQL for what actually got persisted, plus a determinism module for generative-AI output that cannot be exact-matched. Before
         that I led QA through a two-year EMV and PCI PA-DSS certification under external
         audit, which is where I learned what evidence has to look like when somebody outside
         your company is going to read it.
@@ -185,15 +183,14 @@
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>roadsurfer</h3>
-          <p class="timeline__when">2025 — present</p>
+          <p class="timeline__when">2025-present</p>
         </div>
         <p class="timeline__role">QA Test Automation Engineer · remote, Spain</p>
         <p>
           I design and maintain UI automation in Playwright with Java and API tests in REST
           Assured, inside a Gradle multi-module framework, covering booking, back-office
           operations, user accounts, subscriptions and sales for a platform running in
-          around 100 locations across 16 countries. I own the nightly Jenkins regression
-          triage — reproducing against staging, separating real product defects from test
+          around 100 locations across 16 countries. I own the nightly Jenkins regression triage: reproducing against staging, separating real product defects from test
           decay, and gating coverage for unreleased features rather than leaving a tolerated
           red build. I also built a reusable determinism module for generative-AI features
           whose output cannot be exact-matched: it replays fixture scenarios, scores
@@ -207,7 +204,7 @@
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>Fleksy</h3>
-          <p class="timeline__when">2022 — 2025</p>
+          <p class="timeline__when">2022-2025</p>
         </div>
         <p class="timeline__role">QA Engineer, keyboard SDK · remote, Spain</p>
         <p>
@@ -222,7 +219,7 @@
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>Interaction Design Foundation</h3>
-          <p class="timeline__when">2018 — 2022</p>
+          <p class="timeline__when">2018-2022</p>
         </div>
         <p class="timeline__role">Software Tester, Product Operations · remote</p>
         <p>
@@ -237,7 +234,7 @@
       <li class="timeline__item">
         <div class="timeline__head">
           <h3>Sitio Uno</h3>
-          <p class="timeline__when">2013 — 2021</p>
+          <p class="timeline__when">2013-2021</p>
         </div>
         <p class="timeline__role">QA Manager, then QA Consultant · Caracas, Venezuela (remote from 2018)</p>
         <p>
@@ -257,13 +254,13 @@
     <div class="sidenote">
       <div>
         <h3>Education</h3>
-        <p>Bachelor’s, Archival Science, Universidad Central de Venezuela (2008 — 2014)</p>
+        <p>Bachelor’s, Archival Science, Universidad Central de Venezuela (2008-2014)</p>
         <p>UX and Interaction Design, The Interaction Design Foundation (2018)</p>
       </div>
       <div>
         <h3>Languages</h3>
         <p>Spanish, native.</p>
-        <p>English, C1 — my working language for all technical work, documentation and code review.</p>
+        <p>English, C1. My working language for all technical work, documentation and code review.</p>
       </div>
     </div>
   </section>
@@ -273,8 +270,7 @@
     <p class="section__lede">
       Three decisions from
       <a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a>,
-      a framework I built against the Toolshop demo application — Java 21, Gradle 9, JUnit 6,
-      Playwright, REST Assured. Each page is one decision, what it found, and what it cost.
+      a framework I built against the Toolshop demo application in Java 21, Gradle 9, JUnit 6, Playwright and REST Assured. Each page is one decision, what it found, and what it cost.
       Every number comes from that repository.
     </p>
 
@@ -296,7 +292,7 @@
         <p>
           A single checkout followed through API, UI, database and mailbox, because each of
           them can disagree with the others. It caught a defect where one press of “finish”
-          shows a payment success message and creates no order — a suite asserting on that
+          shows a payment success message and creates no order. A suite asserting on that
           message would have reported it passing.
         </p>
         <p class="card__stat"><span>0 orders</span> behind a success message</p>
@@ -323,78 +319,137 @@
   </section>
 
   <section class="section" id="ai-quality">
-    <h2>Testing generative AI</h2>
+    <h2>Catching it when the model quietly starts giving worse answers</h2>
     <p class="section__lede">
-      A feature backed by a language model has no expected output. Part of what it returns is
-      random and part of it is prose, so an equality assertion is too strict and impossible at
-      the same time. I built a framework for testing that kind of feature anyway — by
-      measuring whether the output stays inside bounds I can write down, rather than whether
-      it matches a string.
+      A model call can be subtly wrong in a way an ordinary pass or fail test never catches.
+      This suite runs the AI many times against a fixed input and checks every field against
+      a rule, so drift turns up in a nightly run instead of in production.
     </p>
 
-    <ol class="pipeline">
+    <h3>You cannot exact-match a model</h3>
+    <p class="ai__para">
+      Ask a regression test whether the output equalled X and a model breaks it on day two.
+      The wording shifts, a part id changes, an enum drifts. The right question is not
+      <em>does it equal X</em> but <strong>is every field still within what is allowed</strong>.
+      And because a model can be inconsistent, you have to ask more than once.
+    </p>
+
+    <h3>One fixed input, N runs, every field checked</h3>
+    <ol class="steps">
       <li>
-        <h3>A fixture goes in</h3>
-        <p>
-          One fixed input, and next to it the criteria describing what a good answer to
-          <em>that</em> input looks like. Criteria belong to the input, not to the field.
-        </p>
+        <span class="steps__label">Fixed input</span>
+        <b>Report text</b>
+        <span>A canned description plus the ids it needs.</span>
       </li>
       <li>
-        <h3>The API test posts it to the workflow</h3>
-        <p>
-          Same request, five times, unchanged. One call to a random system proves nothing.
-        </p>
+        <span class="steps__label">Run &times;N</span>
+        <b>Feature webhook</b>
+        <span>The API test posts the same body N times, no browser involved.</span>
       </li>
       <li>
-        <h3>The AI workflow answers, five times</h3>
-        <p>
-          The feature under test — prompt, model, structured output — returns a parsed result
-          per run.
-        </p>
+        <span class="steps__label">Collect</span>
+        <b>N results</b>
+        <span>Each one a full field set.</span>
       </li>
       <li>
-        <h3>Every field gets the check it deserves</h3>
-        <p>
-          Fields computed by code get an ordinary assertion. Fields the model picks from a
-          known universe get a membership check. Promises the prompt makes between fields —
-          “if you left the part empty you must ask a follow-up question” — get a cross-field
-          invariant. Those cost nothing to run and catch the worst failure: the model
-          inventing certainty it does not have.
-        </p>
+        <span class="steps__label">Evaluate</span>
+        <b>Rules</b>
+        <span>Each field against the rule bound to it.</span>
       </li>
       <li>
-        <h3>The prose goes to a judge, behind an interface</h3>
-        <p>
-          A second workflow, its own credential, temperature 0, answering pass or fail with a
-          reason. It grades one field, and separately grades the whole output against the
-          original input for faithfulness. A judge that cannot answer is a loud failure of
-          the run — never a fabricated “fail”, because “the output is bad” and “we could not
-          ask” are different facts.
-        </p>
-      </li>
-      <li>
-        <h3>The report shows every rule that ran</h3>
-        <p>
-          Actual against allowed, passes printed alongside failures. With a dozen rules in
-          play, knowing which ones held is what makes a failure interpretable.
-        </p>
-      </li>
-      <li>
-        <h3>One metrics row per build records the drift</h3>
-        <p>
-          How often the runs disagreed with each other, the judge pass rate, and the value
-          distribution — tagged with the model id and the prompt version, so drift can be
-          attributed to a model change or a prompt change instead of guessed at. Red or green
-          tells you about today; the trend tells you which change caused it.
-        </p>
+        <span class="steps__label">Report</span>
+        <b>Tick or cross per rule</b>
+        <span>Actual against allowed.</span>
       </li>
     </ol>
+    <p class="ai__note">
+      Every run is checked on its own, so drift on any single run fails the case.
+    </p>
 
-    <p class="prose">
-      It runs nightly, never blocks a merge, and has retries switched off — retrying a
-      determinism failure would erase the variance the suite exists to measure. It caught a
-      real output-quality regression while it was still being built.
+    <h3>Four kinds of check cover every field</h3>
+    <p class="ai__para">
+      The engine does not know which feature it is testing. Each field is bound to one of
+      these.
+    </p>
+    <ul class="rules">
+      <li>
+        <b>Allowed set</b>
+        <span>The value must be one of a fixed enum, or of a list exported from the data the
+        feature reads.</span>
+        <code>category in {SCRATCH, DENT, ...}</code>
+      </li>
+      <li>
+        <b>Allowed range</b>
+        <span>A numeric value must fall inside bounds. The engine provides it; no numeric
+        field uses it yet.</span>
+        <code>0.0 &lt;= x &lt;= 1.0</code>
+      </li>
+      <li>
+        <b>Cross-field</b>
+        <span>A relationship between fields on the same result has to hold. These cost
+        nothing to run and catch the worst failure, which is the model inventing certainty it
+        does not have.</span>
+        <code>empty part_id =&gt; follow_up set</code>
+      </li>
+      <li>
+        <b>LLM judge</b>
+        <span>Free text goes to a separate model that returns pass or fail against
+        plain-language criteria.</span>
+        <code>description reads as a real, laconic note</code>
+      </li>
+    </ul>
+
+    <h3>Free text is graded by its own workflow</h3>
+    <p class="ai__para">
+      A description cannot be checked against a list, so it goes to a small judge workflow
+      that QA owns: a webhook in, a model call, a structured verdict out. It sits behind an
+      interface, so no model credential lives in the test code and an offline stub replaces
+      it entirely.
+    </p>
+    <ol class="judge">
+      <li><b>Send</b> <code>{ content, criteria }</code> <span>the field text, plus what “good” means for this fixture</span></li>
+      <li><b>Judge</b> <span>the workflow calls the model at temperature 0, pinned, forced to JSON</span></li>
+      <li><b>Verdict</b> <code>{ pass, reason }</code> <span>a false is a real finding, and the reason says why</span></li>
+      <li><b>Fail loud</b> <span>a broken judge is a hard test failure, never a fabricated false. An error and a disagreement are different things.</span></li>
+    </ol>
+
+    <h3>What it caught on the first run</h3>
+    <p class="ai__para">Four fixtures ran. Three passed. One failed, correctly.</p>
+    <div class="scroll-x" tabindex="0">
+      <table class="catch">
+        <tbody>
+          <tr>
+            <th scope="row">Input</th>
+            <td>“Small stone chip on the windshield, happened on the highway.”</td>
+          </tr>
+          <tr>
+            <th scope="row">Output</th>
+            <td><code>description: "Small stone chip on windshield; exact side not specified, assumed right side."</code></td>
+          </tr>
+          <tr>
+            <th scope="row">Criteria</th>
+            <td>A laconic one-line note naming a stone chip on the windshield, matching the input.</td>
+          </tr>
+          <tr>
+            <th scope="row">Verdict</th>
+            <td><b class="catch__fail">Fail</b> Added an unsupported “right side” assumption, and a windshield has no side, plus meta-commentary. Not laconic, not faithful.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ai__para">
+      A true positive. The classifier invented detail and editorialised, against the rules in
+      its own prompt. Nothing in an ordinary test would have flagged it, because the flow
+      worked and the payload was well formed. What the suite caught was the drop in
+      <em>quality</em>.
+    </p>
+
+    <p class="ai__para">
+      The engine underneath, meaning the repeat runner, the rules and the reporting, has no
+      knowledge of the feature and no production dependencies at all. The next model-backed
+      feature plugs in its own result type and fixtures rather than a new framework. It runs
+      nightly, never blocks a pull request, and prints actual against allowed on every
+      failure, so the ticket writes itself.
     </p>
 
     <p class="section__cta">

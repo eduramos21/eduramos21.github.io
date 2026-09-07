@@ -54,6 +54,17 @@ test.describe('external links', () => {
       expect(html).not.toMatch(/\+\d[\d\s().-]{8,}/);
     });
 
+    // Edu does not write em dashes. Asserted rather than remembered, because the tell of
+    // someone else having written a page is exactly the kind of thing that creeps back in.
+    test(`${path}: contains no em dashes`, async ({ page }) => {
+      await page.goto(path);
+
+      const text = await page.evaluate(() => document.documentElement.outerHTML);
+      const found = [...text.matchAll(/.{0,40}\u2014.{0,40}/g)].map((m) => m[0]);
+
+      expect(found).toEqual([]);
+    });
+
     test(`${path}: every internal link is relative, so the site can move`, async ({ page }) => {
       await page.goto(path);
 

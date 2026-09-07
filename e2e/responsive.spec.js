@@ -47,7 +47,7 @@ test.describe('responsive', () => {
   });
 
   // Wide content has to scroll inside its own box, and whatever box that is has to be
-  // reachable from the keyboard — otherwise the part off-screen is unreachable without a
+  // reachable from the keyboard, or the part off-screen is unreachable without a
   // mouse. This asserts the invariant rather than one element, so a new wide table or
   // code block on any page is covered without anyone remembering to add a test.
   for (const path of PAGES) {

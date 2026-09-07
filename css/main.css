@@ -459,49 +459,164 @@ code {
   font-weight: 600;
 }
 
-.section__cta { margin-top: var(--space-8); }
+/* ------------------------------------------------------------- ai quality */
 
-/* ---------------------------------------------------------------- pipeline */
+.section h3 {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3);
+}
+.section h3:first-of-type { margin-top: var(--space-8); }
 
-/* A real sequence, so the steps are numbered. The counter is on the list, not
-   typed into the content. */
-.pipeline {
+.ai__para {
+  max-width: var(--measure);
+  color: var(--muted);
+  font-size: var(--fs-small);
+  margin-bottom: var(--space-4);
+}
+.ai__para strong { color: var(--text); }
+
+.ai__note {
+  max-width: var(--measure);
+  margin-top: var(--space-4);
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--accent);
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+/* Five steps in reading order. A real sequence, so it is numbered. */
+.steps {
   counter-reset: step;
-  border-left: 1px solid var(--border);
-  margin-bottom: var(--space-12);
-}
-
-.pipeline > li {
-  counter-increment: step;
-  position: relative;
-  padding: 0 0 var(--space-8) var(--space-8);
-  max-width: calc(var(--measure) + var(--space-8));
-}
-.pipeline > li:last-child { padding-bottom: 0; }
-
-.pipeline > li::before {
-  content: counter(step);
-  position: absolute;
-  left: -0.8125rem;
-  top: 0.2rem;
-  width: 1.625rem;
-  height: 1.625rem;
   display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--bg);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.steps > li {
+  counter-increment: step;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--surface);
   border: 1px solid var(--border);
+  border-top: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--fs-small);
+}
+.steps > li:last-child { border-top-color: var(--accent); }
+
+.steps__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+.steps__label::before {
+  content: counter(step) " ";
+  color: var(--accent);
+}
+
+.steps b { color: var(--text); font-weight: 600; }
+.steps span:not(.steps__label) { color: var(--muted); font-size: 0.8125rem; }
+
+/* Four kinds of check, each with the shape of the rule it enforces. */
+/* Two by two, so the four kinds read as a set rather than three and a leftover. */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 720px) {
+  .rules { grid-template-columns: 1fr; }
+}
+
+.rules > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius);
+}
+.rules b { font-weight: 700; }
+.rules span { color: var(--muted); font-size: var(--fs-small); }
+.rules code {
+  margin-top: auto;
+  align-self: start;
+  max-width: 100%;
+  overflow-x: auto;
+  font-size: 0.75rem;
+}
+
+.judge {
+  counter-reset: jstep;
+  max-width: var(--measure);
+  border-top: 1px solid var(--border);
+}
+.judge > li {
+  counter-increment: jstep;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3) 0 var(--space-3) var(--space-6);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  font-size: var(--fs-small);
+}
+.judge > li::before {
+  content: counter(jstep);
+  position: absolute;
+  left: 0;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--accent);
 }
+.judge b { font-weight: 700; }
+.judge span { color: var(--muted); flex: 1 1 100%; }
+.judge code { font-size: 0.75rem; }
 
-.pipeline h3 {
-  font-size: var(--fs-h3);
-  font-weight: 700;
-  margin-bottom: var(--space-2);
+/* The worked failure. A label column, so it reads as a record. */
+.catch {
+  border: 1px solid var(--border);
+  font-size: var(--fs-small);
 }
-.pipeline p { color: var(--muted); font-size: var(--fs-small); }
+.catch th[scope="row"] {
+  width: 6.5rem;
+  vertical-align: top;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.catch td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+.catch tr:last-child th,
+.catch tr:last-child td { border-bottom: 0; }
+.catch code { font-size: 0.75rem; white-space: normal; }
+
+.catch__fail {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px solid #d98a3d;
+  border-radius: 3px;
+  color: #e5a463;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+}
+
+.section__cta { margin-top: var(--space-12); }
 
 /* ------------------------------------------------------- prose extras */
 
