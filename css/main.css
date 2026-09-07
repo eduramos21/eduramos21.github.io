@@ -473,6 +473,16 @@ code {
 
 /* ------------------------------------------------------------- ai quality */
 
+/* A tagline sits under the section heading. Italic, and narrower than body copy. */
+.section__tagline {
+  max-width: var(--measure);
+  margin-top: calc(var(--space-6) * -1);
+  margin-bottom: var(--space-6);
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--muted);
+}
+
 #ai-quality h3 {
   font-size: var(--fs-h3);
   font-weight: 700;
