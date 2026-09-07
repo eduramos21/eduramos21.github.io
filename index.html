@@ -4,17 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Eduardo Ramos — QA Test Automation Engineer</title>
-<meta name="description" content="QA test automation engineer. I design and own automated test frameworks rather than only add cases to them.">
+<meta name="description" content="QA test automation engineer, 13 years in software quality. I design and own automated test frameworks rather than only add cases to them.">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header>
-  <nav aria-label="Main">
-    <a href="#main">Edu Ramos</a>
-    <ul>
-      <li><a href="#work">Work</a></li>
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="#main">Edu Ramos</a>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu">
+      <span class="nav__toggle-bars" aria-hidden="true"></span>
+      Menu
+    </button>
+    <ul class="nav__menu" id="nav-menu">
+      <li><a href="#about">About</a></li>
+      <li><a href="#expertise">Expertise</a></li>
       <li><a href="#experience">Experience</a></li>
+      <li><a href="#work">Work</a></li>
       <li><a href="#qa-lab">QA Lab</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -22,21 +30,342 @@
 </header>
 
 <main id="main">
-  <section id="hero">
-    <h1>Eduardo Ramos</h1>
-    <p>QA Test Automation Engineer</p>
+
+  <section class="hero" id="hero">
+    <div class="hero__inner">
+      <img class="hero__photo" src="assets/img/me.svg" width="180" height="180"
+           alt="Eduardo Ramos">
+      <div class="hero__text">
+        <h1>Eduardo&nbsp;Ramos</h1>
+        <p class="hero__role">QA Test Automation Engineer</p>
+        <p class="hero__pitch">
+          I design and own automated test frameworks rather than only add cases to them.
+          What I look for is the testing problem people call untestable.
+        </p>
+        <p class="hero__actions">
+          <a class="btn btn--primary" href="#work">See the work</a>
+          <a class="btn" href="#contact">Get in touch</a>
+        </p>
+        <p class="hero__meta">Ourense, Galicia, Spain · remote since 2018</p>
+      </div>
+    </div>
   </section>
 
-  <section id="about"><h2>About</h2></section>
-  <section id="expertise"><h2>Expertise</h2></section>
-  <section id="experience"><h2>Experience</h2></section>
-  <section id="work"><h2>Selected work</h2></section>
-  <section id="qa-lab"><h2>QA Lab</h2></section>
-  <section id="contact"><h2>Contact</h2></section>
+  <section class="section" id="about">
+    <h2>About</h2>
+    <div class="prose">
+      <p>
+        I have spent thirteen years in software quality, the last seven of them remote.
+        Most of that time has gone into the same problem from different angles: how do you
+        get a test suite to tell you something true about the product, on the day you need
+        to know it, without a person having to remember anything.
+      </p>
+      <p>
+        At the moment that means a Gradle multi-module framework in Java — Playwright for
+        the UI, REST Assured for the API, SQL for what actually got persisted — and a
+        determinism module for generative-AI output that cannot be exact-matched. Before
+        that I led QA through a two-year EMV and PCI PA-DSS certification under external
+        audit, which is where I learned what evidence has to look like when somebody outside
+        your company is going to read it.
+      </p>
+      <p>
+        I write frameworks so that the wrong thing is hard to do: tags that are annotations
+        instead of strings, so a typo will not compile; contract validation on every call,
+        so no test can opt out; failure evidence attached by the framework, so nobody has to
+        remember a screenshot. The three case studies below are each one of those decisions
+        and what it cost.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="expertise">
+    <h2>Expertise</h2>
+    <div class="stack">
+
+      <div class="stack__group">
+        <h3>Test automation</h3>
+        <ul class="chips">
+          <li>Playwright</li>
+          <li>Selenium</li>
+          <li>REST Assured</li>
+          <li>JUnit 5 / 6</li>
+          <li>Allure</li>
+          <li>Page objects</li>
+          <li>Parallel execution</li>
+        </ul>
+      </div>
+
+      <div class="stack__group">
+        <h3>Languages</h3>
+        <ul class="chips">
+          <li>Java 21</li>
+          <li>Python</li>
+          <li>Kotlin</li>
+          <li>SQL</li>
+          <li>JavaScript</li>
+        </ul>
+      </div>
+
+      <div class="stack__group">
+        <h3>Build and CI</h3>
+        <ul class="chips">
+          <li>Gradle</li>
+          <li>Jenkins</li>
+          <li>GitHub Actions</li>
+          <li>Docker</li>
+          <li>Spring Boot</li>
+          <li>Git / PR review</li>
+        </ul>
+      </div>
+
+      <div class="stack__group">
+        <h3>Practice</h3>
+        <ul class="chips">
+          <li>End-to-end</li>
+          <li>API and database validation</li>
+          <li>Contract testing</li>
+          <li>Accessibility baselines</li>
+          <li>Regression triage</li>
+          <li>Given/When/Then</li>
+          <li>TDD</li>
+          <li>Exploratory</li>
+          <li>Test strategy</li>
+        </ul>
+      </div>
+
+      <div class="stack__group">
+        <h3>AI and LLM quality</h3>
+        <ul class="chips">
+          <li>Determinism testing</li>
+          <li>Bounded-output testing</li>
+          <li>LLM-as-judge criteria</li>
+          <li>Per-field drift tracking</li>
+          <li>n8n workflow testing</li>
+          <li>Claude Code</li>
+        </ul>
+      </div>
+
+      <div class="stack__group">
+        <h3>Compliance</h3>
+        <ul class="chips">
+          <li>EMV</li>
+          <li>PCI PA-DSS</li>
+          <li>Requirement-to-test traceability</li>
+          <li>External audit evidence</li>
+          <li>GDPR test data</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <h2>Experience</h2>
+
+    <ol class="timeline">
+
+      <li class="timeline__item">
+        <div class="timeline__head">
+          <h3>roadsurfer</h3>
+          <p class="timeline__when">2025 — present</p>
+        </div>
+        <p class="timeline__role">QA Test Automation Engineer · remote, Spain</p>
+        <p>
+          I design and maintain UI automation in Playwright with Java and API tests in REST
+          Assured, inside a Gradle multi-module framework, covering booking, back-office
+          operations, user accounts, subscriptions and sales for a platform running in
+          around 100 locations across 16 countries. I own the nightly Jenkins regression
+          triage — reproducing against staging, separating real product defects from test
+          decay, and gating coverage for unreleased features rather than leaving a tolerated
+          red build. I also built a reusable determinism module for generative-AI features
+          whose output cannot be exact-matched: it replays fixture scenarios, scores
+          structured and free-text responses with an LLM-as-judge against per-fixture
+          criteria, and records per-field drift and judge pass rate per build, tagged by
+          model and workflow version, so a regression can be attributed to a model or a
+          prompt change.
+        </p>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__head">
+          <h3>Fleksy</h3>
+          <p class="timeline__when">2022 — 2025</p>
+        </div>
+        <p class="timeline__role">QA Engineer, keyboard SDK · remote, Spain</p>
+        <p>
+          Designed and maintained automated UI and API suites with Selenium in Java, Kotlin
+          and Python for new and existing SDK features. Built smoke, sanity, functional,
+          regression and usability workflows across browsers and on iOS and Android devices,
+          and read user stories and requirements to find quality risks before writing any
+          automation for them.
+        </p>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__head">
+          <h3>Interaction Design Foundation</h3>
+          <p class="timeline__when">2018 — 2022</p>
+        </div>
+        <p class="timeline__role">Software Tester, Product Operations · remote</p>
+        <p>
+          Led software testing strategy for an online learning platform used by 1,576
+          companies with over 1.1 million course enrolments, and established the testing
+          practice for a product team that had no dedicated QA function. Mentored staff day
+          to day, turned product feedback into actionable items for the development team, and
+          ran functional and usability testing across member-facing and internal systems.
+        </p>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__head">
+          <h3>Sitio Uno</h3>
+          <p class="timeline__when">2013 — 2021</p>
+        </div>
+        <p class="timeline__role">QA Manager, then QA Consultant · Caracas, Venezuela (remote from 2018)</p>
+        <p>
+          Led certification of payment software with FirstData/Fiserv over roughly two years,
+          covering EMV payment technology and the PCI PA-DSS security standard across
+          combined hardware and software, and handled version control of the application, its
+          releases and the test evidence submitted for certification. Directed two technical
+          writers through the twenty-odd implementation guides and certification documents
+          the standard required, and built the test plans, product requirements and customer
+          support plans for an agile team from scratch. Two EMV projects reached over 100,000
+          users in their first two years.
+        </p>
+      </li>
+
+    </ol>
+
+    <div class="sidenote">
+      <div>
+        <h3>Education</h3>
+        <p>Licenciado en Archivología, Universidad Central de Venezuela (2008 — 2014)</p>
+        <p>UX and Interaction Design, The Interaction Design Foundation (2018)</p>
+      </div>
+      <div>
+        <h3>Languages</h3>
+        <p>Spanish, native.</p>
+        <p>English, C1 — my working language for all technical work, documentation and code review.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <h2>Selected work</h2>
+    <p class="section__lede">
+      Three decisions from
+      <a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a>,
+      a framework I built against the Toolshop demo application — Java 21, Gradle 9, JUnit 6,
+      Playwright, REST Assured. Each page is one decision, what it found, and what it cost.
+      Every number comes from that repository.
+    </p>
+
+    <ul class="cards">
+
+      <li class="card">
+        <h3><a href="work/toolshop-contract.html">Contract validation nobody can skip</a></h3>
+        <p>
+          I moved OpenAPI validation onto the shared request specification as a filter, so
+          every call any test makes is validated and no test can opt out. Turning it on
+          failed 28 of 41 tests, from thirteen distinct disagreements between the document
+          and the running application.
+        </p>
+        <p class="card__stat"><span>28 / 41</span> tests failed the first time it ran</p>
+      </li>
+
+      <li class="card">
+        <h3><a href="work/toolshop-checkout.html">One purchase, four layers</a></h3>
+        <p>
+          A single checkout followed through API, UI, database and mailbox, because each of
+          them can disagree with the others. It caught a defect where one press of “finish”
+          shows a payment success message and creates no order — a suite asserting on that
+          message would have reported it passing.
+        </p>
+        <p class="card__stat"><span>0 orders</span> behind a success message</p>
+      </li>
+
+      <li class="card">
+        <h3><a href="work/toolshop-selection.html">A selection that runs nothing must fail</a></h3>
+        <p>
+          Thirteen tags as annotations rather than strings, so a misspelled tag will not
+          compile, plus one guard in the root build that fails any run whose tag expression
+          matched zero tests. Where that guard could live turned out to be the whole problem.
+        </p>
+        <p class="card__stat"><span>13 tags</span> a typo cannot get into</p>
+      </li>
+
+    </ul>
+
+    <p class="prose">
+      Two more decisions in that repository that did not get their own page: accessibility is
+      asserted against a per-page baseline rather than against zero, so a new violation and a
+      fixed one both fail the build; and the same bytecode runs against local Docker, CI and
+      the hosted deployment with only configuration changing.
+    </p>
+  </section>
+
+  <section class="section" id="qa-lab">
+    <h2>QA Lab</h2>
+    <p class="section__lede">
+      This site is plain HTML, CSS and JavaScript with no build step. It has a Playwright
+      suite that tests it, and that suite runs on every push and pull request.
+    </p>
+
+    <div class="lab">
+      <table class="lab__table">
+        <caption>What the suite checks</caption>
+        <thead>
+          <tr><th scope="col">Spec</th><th scope="col">Checks</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">smoke</th><td>page loads, title, hero heading, no console errors</td></tr>
+          <tr><th scope="row">navigation</th><td>every anchor link brings its section into the viewport, active state follows the scroll, mobile menu opens and closes</td></tr>
+          <tr><th scope="row">case-studies</th><td>each case study answers 200 and has one heading and a way back</td></tr>
+          <tr><th scope="row">external-links</th><td>LinkedIn and GitHub links are well formed, every new-tab link carries <code>rel="noopener"</code>, and no page anywhere exposes an email address</td></tr>
+          <tr><th scope="row">responsive</th><td>no horizontal scroll at 360, 768 and 1440 pixels, navigation collapses on mobile</td></tr>
+          <tr><th scope="row">a11y</th><td>one <code>h1</code>, heading order, image alt text, visible keyboard focus, working skip link, zero critical axe violations</td></tr>
+        </tbody>
+      </table>
+
+      <p class="lab__links">
+        <a href="https://github.com/eduramos21/eduramos21.github.io/tree/main/e2e" target="_blank" rel="noopener">Read the specs</a>
+        <a href="https://github.com/eduramos21/eduramos21.github.io/actions/workflows/e2e.yml" target="_blank" rel="noopener">See the runs</a>
+      </p>
+
+      <p class="lab__note">
+        There is no live runner on this page. Playwright cannot run in a browser, and a
+        widget replaying a recording would be a picture of a test, not a test. The link
+        above goes to the actual runs, pass or fail.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <h2>Contact</h2>
+    <p class="section__lede">
+      LinkedIn is the fastest way to reach me. I keep no email address on this page.
+    </p>
+    <ul class="contact">
+      <li>
+        <a href="https://www.linkedin.com/in/eduardo-ramos-anderson/" target="_blank" rel="noopener">LinkedIn</a>
+        <span>eduardo-ramos-anderson</span>
+      </li>
+      <li>
+        <a href="https://github.com/eduramos21" target="_blank" rel="noopener">GitHub</a>
+        <span>eduramos21</span>
+      </li>
+    </ul>
+  </section>
+
 </main>
 
-<footer>
-  <p>Built as plain HTML, CSS and JavaScript. Tested with Playwright.</p>
+<footer class="site-footer">
+  <p>
+    Plain HTML, CSS and vanilla JavaScript. No build step, no analytics, no tracking.
+    <a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source</a>.
+  </p>
 </footer>
+
+<script src="js/main.js"></script>
 </body>
 </html>

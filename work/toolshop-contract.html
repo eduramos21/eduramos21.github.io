@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract validation nobody can skip — Eduardo Ramos</title>
+<meta name="description" content="I moved OpenAPI validation onto the shared request specification so no test can opt out. It failed 28 of 41 tests from thirteen distinct disagreements.">
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="../index.html">Edu Ramos</a>
+    <ul class="nav__menu nav__menu--static">
+      <li><a href="../index.html#work">All work</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="case">
+
+  <h1>Contract validation nobody can skip</h1>
+
+  <dl class="case__facts">
+    <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a></dd></div>
+    <div><dt>Layer</dt><dd>API — REST Assured, Java 21</dd></div>
+    <div><dt>Decision record</dt><dd><a href="https://github.com/eduramos21/toolshop-automation/blob/main/docs/adr/0007-contract-validation-runs-on-every-call.md" target="_blank" rel="noopener">ADR 0007</a></dd></div>
+  </dl>
+
+  <div class="prose">
+
+    <h2>The problem</h2>
+    <p>
+      The suite I wrote this framework against advertised OpenAPI contract validation in its
+      documentation. What actually existed was a private method with no callers, no
+      specification files, and no test that used it.
+    </p>
+    <p>
+      That is the failure mode worth designing against. Contract validation that is opt-in is
+      contract validation that gets opted out of, because the tests that need it most are the
+      ones nobody remembered to add it to.
+    </p>
+
+    <h2>What I built</h2>
+    <p>
+      The validator is a REST Assured filter on the shared request specification. Every call
+      any test makes is validated. There is no way to write a test that skips it, and a new
+      test gets it without asking for it.
+    </p>
+    <p>
+      The document is fetched from the running application at <code>/docs</code> rather than
+      committed into the test repository. A committed copy is a contract the test repository
+      asserts against itself, and it goes stale silently.
+    </p>
+
+    <h2>What it found</h2>
+    <p>
+      Turning it on failed <strong>28 of 41 tests</strong>, from thirteen distinct
+      disagreements. Every one of them was the document under-reporting what the application
+      actually answers:
+    </p>
+    <ul>
+      <li><code>POST /invoices</code> answers 201 where the document lists only 200</li>
+      <li>every administrative route answers an undocumented 403</li>
+      <li>a locked account answers an undocumented 423</li>
+      <li><code>POST /users/register</code> answers 409 for a duplicate email, documented as 422</li>
+    </ul>
+    <p>
+      So every contract in this layer was taken from probing the running application rather
+      than from reading the specification. The specification being wrong then became
+      something worth asserting in its own right, which is what the validation step is now
+      for.
+    </p>
+
+    <h2>The part that took the time</h2>
+    <p>
+      The document is OpenAPI 3.2, and no Java validator supports 3.2. The parser does not
+      recognise the version, falls back to Swagger 2 parsing, and then rejects
+      <code>content</code> and <code>requestBody</code> as unexpected on every operation in
+      the file. Setting the version to 3.1.0 left exactly one complaint: seven paths declare
+      a <code>query</code> operation. <code>QUERY</code> is a real HTTP method that OpenAPI
+      3.2 added, and the application really does use it — the storefront sends
+      <code>QUERY /products</code> — so this is a genuine 3.2 document, not a mislabelled
+      one.
+    </p>
+    <p>
+      The document is therefore normalised in two ways and no others: the version is set to
+      3.1.0, and the <code>query</code> operation is removed from the seven paths that have
+      one. Both are removals of things the suite does not exercise — <code>/products</code>
+      keeps its <code>get</code>, which is the operation the suite calls. A test asserts
+      exactly which operations were dropped, so the cost of the normalising cannot grow
+      unnoticed.
+    </p>
+
+    <h2>What it cost</h2>
+    <p>
+      Thirteen known deviations, declared individually in a whitelist rather than as a blanket
+      relaxation. A test asserts that each one is <em>still</em> a deviation, so when the
+      application's documentation is finally corrected the build tells me the entry can be
+      removed. A whitelist that only ever grows is a whitelist nobody reads.
+    </p>
+
+  </div>
+
+  <p class="case__back"><a href="../index.html#work">Back to selected work</a></p>
+</main>
+
+<footer class="site-footer">
+  <p><a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source of this site</a></p>
+</footer>
+</body>
+</html>

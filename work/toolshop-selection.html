@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A selection that runs nothing must fail — Eduardo Ramos</title>
+<meta name="description" content="Thirteen tags as annotations so a typo will not compile, plus one guard that fails any run whose tag expression matched zero tests. Gradle's own guard does not cover it.">
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="../index.html">Edu Ramos</a>
+    <ul class="nav__menu nav__menu--static">
+      <li><a href="../index.html#work">All work</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="case">
+
+  <h1>A selection that runs nothing must fail</h1>
+
+  <dl class="case__facts">
+    <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a></dd></div>
+    <div><dt>Layer</dt><dd>Build and execution — Gradle 9.7.1, JUnit 6.1.3</dd></div>
+    <div><dt>Decision record</dt><dd><a href="https://github.com/eduramos21/toolshop-automation/blob/main/docs/adr/0003-empty-test-selection-must-fail.md" target="_blank" rel="noopener">ADR 0003</a></dd></div>
+  </dl>
+
+  <div class="prose">
+
+    <h2>The problem</h2>
+    <p>
+      In a large Java suite I assessed before starting this framework, most of the UI tests
+      were reachable only through catch-all suites, so they ran in no smoke job and no
+      regression job. Separately, suite selection there was driven by a CI job-name string,
+      and an unmatched name produced a Gradle command with empty property values rather than
+      an error.
+    </p>
+    <p>
+      Both are the same failure: <strong>a run that executes nothing and reports
+      green.</strong> It is the failure mode worth designing against hardest, because unlike
+      a red build it gives no signal at all that something is wrong.
+    </p>
+
+    <h2>The assumption that was wrong</h2>
+    <p>
+      I planned on Gradle 9's <code>failOnNoDiscoveredTests</code>, which defaults to true.
+      The upgrade guide's wording — “test sources are present, but no test was selected for
+      execution” — reads exactly like it covers this. So I measured it, on a module with one
+      passing test:
+    </p>
+
+    <table class="case__table">
+      <thead>
+        <tr><th scope="col">Configuration</th><th scope="col">Result</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>includeTags("doesnotexist")</code>, defaults</td><td>BUILD SUCCESSFUL</td></tr>
+        <tr><td>plus <code>failOnNoDiscoveredTests = true</code> explicitly</td><td>BUILD SUCCESSFUL</td></tr>
+        <tr><td>plus <code>filter.isFailOnNoMatchingTests = true</code></td><td>BUILD SUCCESSFUL</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Neither property fires. JUnit tag filtering is a <em>post-discovery</em> filter: the
+      test class is discovered, then removed. “No tests discovered” is therefore false — one
+      was discovered and zero were executed, and Gradle's guard only covers the discovery
+      stage. <code>filter.isFailOnNoMatchingTests</code> is a different mechanism entirely;
+      it governs Gradle's own <code>--tests</code> patterns, not JUnit Platform filters.
+    </p>
+    <p>
+      Both properties stay set anyway — they cost nothing and they do catch
+      <code>--tests</code> typos — with a comment pointing at the decision record, so nobody
+      re-derives the wrong conclusion from their names.
+    </p>
+
+    <h2>What I built</h2>
+    <p>
+      Two halves. First, thirteen tags as annotations rather than strings, so
+      <code>@Smoek</code> is a compile error instead of a test that quietly belongs to no
+      suite. Twelve files of four lines each, and it buys the thing that matters.
+    </p>
+    <p>
+      Second, <code>verifyTestSelection</code>: one task in the root build that finalises
+      every <code>Test</code> task, sums executed tests across every module's JUnit XML, and
+      fails on zero.
+    </p>
+
+    <h2>Where the guard could live was the whole problem</h2>
+    <p>
+      The instinct is to put it in the conventions plugin with everything else, failing each
+      module that selected nothing. That is wrong, and the reason is structural: there is one
+      layer tag per module, so <code>-Ptags=api</code> is <em>supposed</em> to select zero
+      tests in the UI and data modules. Only zero across the whole invocation is a mistake.
+    </p>
+    <p>
+      A per-module guard would have produced a false failure on the most ordinary command in
+      the vocabulary, and would have been switched off within a week. The root build is not a
+      compromise here; it is the only place that can see the thing being checked.
+    </p>
+    <p>Two more details that are decisions rather than mechanics:</p>
+    <ul>
+      <li>
+        It is only wired into the task graph when <code>-Ptags</code> is present, so an
+        ordinary run has one fewer task and a configuration failure reports one error instead
+        of two.
+      </li>
+      <li>
+        Its failure message lists the tag vocabulary by reading the annotation file names in
+        the core module, so the build holds no second copy of the list to drift out of date.
+        A test keeps a file name and the tag it declares in step — without it, that message
+        could go quietly stale, which is the same class of bug one level up.
+      </li>
+    </ul>
+    <p>
+      Reading the JUnit XML is safe against stale results because Gradle wipes a task's
+      output directory when it re-executes, and changing <code>-Ptags</code> changes the
+      task's inputs, so a re-run always rewrites. I checked that rather than assuming it.
+    </p>
+
+    <h2>The limits, stated</h2>
+    <p>
+      A single-module invocation can still pass wrongly:
+      <code>./gradlew :core:test -Ptags=x</code> leaves the other modules' test tasks out of
+      the graph, so their result directories keep XML from an earlier run and get counted.
+      The exact guarantee holds for any invocation where the test tasks actually run, which is
+      every form CI and the entry script use. Closing it properly needs per-task
+      participation through a build service — more machinery than the case is worth.
+    </p>
+    <p>
+      And <code>-Ptags=quarantine</code> finding nothing is good news, but the guard fails it,
+      because it cannot tell an empty quarantine list from a typo. The obvious fix is a flag
+      that suppresses the guard, which is a flag that ends up in a CI file silencing a real
+      problem. It stays open until the scheduled job that needs it actually exists.
+    </p>
+
+    <h2>What it verifies</h2>
+    <p>
+      <code>./gradlew test -Ptags=doesnotexist</code> fails, and
+      <code>./gradlew test -Ptags='smoke &amp; admin'</code> — a valid expression that matches
+      nothing — fails too. That now tests my own guard rather than an assumed Gradle
+      behaviour. Without it the whole tagging scheme is decorative, because a mistyped tag
+      produces the exact silent-green outcome the tagging exists to prevent.
+    </p>
+
+  </div>
+
+  <p class="case__back"><a href="../index.html#work">Back to selected work</a></p>
+</main>
+
+<footer class="site-footer">
+  <p><a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source of this site</a></p>
+</footer>
+</body>
+</html>

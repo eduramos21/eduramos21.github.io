@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One purchase, four layers — Eduardo Ramos</title>
+<meta name="description" content="A checkout followed through API, UI, database and mailbox. It caught a defect where one press of finish shows payment success and creates no order.">
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="../index.html">Edu Ramos</a>
+    <ul class="nav__menu nav__menu--static">
+      <li><a href="../index.html#work">All work</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="case">
+
+  <h1>One purchase, four layers</h1>
+
+  <dl class="case__facts">
+    <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a></dd></div>
+    <div><dt>Layers</dt><dd>API, UI, database, mail</dd></div>
+    <div><dt>Decision record</dt><dd><a href="https://github.com/eduramos21/toolshop-automation/blob/main/docs/adr/0005-failure-evidence-is-attached-by-one-extension.md" target="_blank" rel="noopener">ADR 0005</a></dd></div>
+  </dl>
+
+  <div class="prose">
+
+    <h2>The problem</h2>
+    <p>
+      A checkout is the one flow where every layer can lie independently. The page can say
+      the payment worked, the API can answer 201, the invoice row can be missing, and the
+      customer can get no email — in any combination. A suite that only drives the UI will
+      report on the first of those and nothing else.
+    </p>
+
+    <h2>What I built</h2>
+    <p>One purchase, followed all the way through:</p>
+    <pre class="flow"><code>API      an account and a product, created through the application
+UI       storefront -&gt; cart -&gt; sign in -&gt; address -&gt; payment
+DB       the invoices row, its line, and the total
+mail     the confirmation the customer actually received</code></pre>
+    <p>
+      The setup happens through the application's own API rather than by seeding the
+      database, so the test never depends on a schema it does not own. The assertions then
+      go the other way — down to SQL and to the mailbox — because that is where the evidence
+      is that something was really persisted and really sent.
+    </p>
+
+    <h2>What it found</h2>
+    <p>
+      On this application, one press of “finish” shows the payment success message and
+      places <strong>no order at all</strong>.
+    </p>
+    <p>
+      The cause is in the payment component. <code>checkPayment()</code> fires its request
+      and then returns the state field's value <em>before</em> the response arrives. On the
+      first click that value is <code>undefined</code>, the <code>result === true</code>
+      guard fails, and <code>POST /invoices</code> is never sent. The response then sets the
+      field to true, so a second click works.
+    </p>
+    <p>
+      Measured: with one click, no <code>POST /invoices</code> appears in the browser network
+      log and no invoice row is written. With two clicks, the request is sent and answers
+      201.
+    </p>
+    <p>
+      The user-visible half is what makes it worth its own test. The success message appears
+      on the first click, so the page reports success while nothing was ordered — and the
+      invoice call's error handler is empty, so a genuine failure would look exactly the
+      same. <strong>A suite that asserted on the payment message would have reported this as
+      passing.</strong>
+    </p>
+
+    <h2>Why it is quarantined rather than fixed or deleted</h2>
+    <p>
+      The application is third-party here, so I cannot fix it in this repository. That left
+      two options: assert the broken behaviour, which turns a defect into a requirement and
+      means the suite goes red the day it is fixed — or say what should happen and mark it
+      known.
+    </p>
+    <p>
+      <code>@Quarantine</code> is that mark. It is excluded from the blocking run, kept
+      visible, and run on a schedule so its status stays observable. It is not a retry, and
+      nothing about it is hidden. The rest of the slice — invoice row, invoice line,
+      confirmation email — is still verified by driving the application the way it actually
+      behaves, in exactly one documented place.
+    </p>
+
+    <h2>The related decision: evidence nobody has to remember</h2>
+    <p>
+      The suite I assessed before this one captured failure evidence through a field each
+      test set by hand at the end of its body, read by an <code>@AfterEach</code> that
+      attached a screenshot when the value was anything else. There were 258 call sites.
+      About fifteen were missing or wrong, so those tests attached a screenshot on every
+      passing run — and the failures that most needed evidence had none.
+    </p>
+    <p>
+      A convention applied 258 times is a convention that is applied 243 times. The fix is
+      not more discipline, it is removing the call site. So there is one extension, registered
+      by <code>ServiceLoader</code>, applying to every UI test with nothing to remember and
+      nothing to extend. On failure it attaches the screenshot, the Playwright trace, the page
+      URL, the failed requests and the browser console.
+    </p>
+    <p>
+      Getting that right needed one measurement rather than an assumption: the evidence is not
+      all available at the same moment. A screenshot needs an open page; the trace zip is only
+      written when the browser context closes. So there are two hooks, and which one collects
+      what was verified with a deliberately failing test rather than reasoned about.
+    </p>
+
+  </div>
+
+  <p class="case__back"><a href="../index.html#work">Back to selected work</a></p>
+</main>
+
+<footer class="site-footer">
+  <p><a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source of this site</a></p>
+</footer>
+</body>
+</html>
