@@ -17,7 +17,7 @@ engineer should be tested.
 | Spec | Checks |
 |---|---|
 | [`smoke`](e2e/smoke.spec.js) | page loads, title, hero heading, no console errors, no failed requests |
-| [`navigation`](e2e/navigation.spec.js) | every anchor link brings its section into the viewport, active state follows the scroll, mobile menu opens and closes, skip link is first in the tab order |
+| [`navigation`](e2e/navigation.spec.js) | every anchor link brings its section into the viewport, active state follows the scroll, mobile menu opens and closes, skip link is first in the tab order, and the back-to-top button never overlaps the content column |
 | [`case-studies`](e2e/case-studies.spec.js) | each case study answers 200, has one `h1`, a way back, and a link to its decision record |
 | [`external-links`](e2e/external-links.spec.js) | LinkedIn and GitHub links are exact, every new-tab link is https with `rel="noopener"`, internal links stay relative, **no page exposes an email address or phone number**, and no page contains an em dash |
 | [`responsive`](e2e/responsive.spec.js) | no horizontal scroll at 360, 768 and 1440 pixels, nav collapses on mobile, wide tables scroll inside themselves |

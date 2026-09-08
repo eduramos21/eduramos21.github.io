@@ -732,6 +732,64 @@ code {
   color: var(--muted);
 }
 
+/* --------------------------------------------------------- back to top */
+
+/* Parked in the gutter beside the content column, never over it. The content
+   column is --page wide and centred, so half the leftover width is the gutter;
+   the button only appears once that gutter can hold it, which is why the whole
+   thing is behind a min-width query rather than clamped with max(). Below that
+   width there is no side of the screen to sit on, so the footer link is the
+   fallback. */
+.to-top { display: none; }
+
+.site-footer__top {
+  margin-top: var(--space-4);
+  font-size: var(--fs-small);
+}
+.site-footer__top a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 1220px) {
+  .site-footer__top { display: none; }
+
+  .to-top {
+    position: fixed;
+    z-index: 40;
+    bottom: var(--space-8);
+    right: calc(50% - (var(--page) / 2) - 3.25rem);
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 150ms ease, visibility 150ms ease, color 150ms ease,
+                border-color 150ms ease;
+  }
+
+  /* visibility, not just opacity, so a hidden button is out of the tab order. */
+  .to-top[data-visible="true"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .to-top:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top { transition: none; }
+}
+
 /* ----------------------------------------------------------------- footer */
 
 .site-footer {

@@ -91,3 +91,61 @@ test.describe('mobile menu', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 });
+
+test.describe('back to top', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test('appears only after the first screenful, and returns to the top', async ({ page }) => {
+    await page.goto('/');
+
+    const button = page.locator('.to-top');
+    await expect(button).toBeHidden();
+
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
+    await expect(button).toBeVisible();
+
+    await button.click();
+    await expect
+      .poll(() => page.evaluate(() => window.pageYOffset), { timeout: 5000 })
+      .toBeLessThan(200);
+  });
+
+  // The whole reason it is parked in the gutter rather than floated over the corner.
+  test('never overlaps the content column', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
+
+    const button = page.locator('.to-top');
+    await expect(button).toBeVisible();
+
+    const overlaps = await page.evaluate(() => {
+      const btn = document.querySelector('.to-top').getBoundingClientRect();
+      const hits = [];
+
+      document.querySelectorAll('main *').forEach((node) => {
+        if (!node.textContent.trim() && !node.matches('img, svg, table')) return;
+        const r = node.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return;
+        const intersects =
+          r.left < btn.right && r.right > btn.left && r.top < btn.bottom && r.bottom > btn.top;
+        if (intersects) hits.push(node.tagName + '.' + node.className);
+      });
+
+      return hits;
+    });
+
+    expect(overlaps).toEqual([]);
+  });
+
+  test('below the gutter width it becomes a footer link instead', async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 900 });
+    await page.goto('/');
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
+
+    await expect(page.locator('.to-top')).toBeHidden();
+
+    const footerLink = page.locator('.site-footer__top a');
+    await expect(footerLink).toBeVisible();
+    await expect(footerLink).toHaveAttribute('href', '#main');
+  });
+});

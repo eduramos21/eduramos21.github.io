@@ -24,6 +24,20 @@
     });
   }
 
+  // Show the back-to-top button once the first screenful has gone by. This sits above
+  // the early return below, because the case study pages have no section nav and would
+  // otherwise never reach it.
+  var toTop = document.querySelector('.to-top');
+
+  if (toTop) {
+    var showToTop = function () {
+      var past = window.pageYOffset > window.innerHeight * 0.6;
+      toTop.setAttribute('data-visible', String(past));
+    };
+    window.addEventListener('scroll', showToTop, { passive: true });
+    showToTop();
+  }
+
   var links = menu ? Array.prototype.slice.call(menu.querySelectorAll('a[href^="#"]')) : [];
   var sections = links
     .map(function (link) { return document.querySelector(link.getAttribute('href')); })
