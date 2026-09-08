@@ -734,12 +734,20 @@ code {
 
 /* --------------------------------------------------------- back to top */
 
-/* Parked in the gutter beside the content column, never over it. The content
-   column is --page wide and centred, so half the leftover width is the gutter;
-   the button only appears once that gutter can hold it, which is why the whole
-   thing is behind a min-width query rather than clamped with max(). Below that
-   width there is no side of the screen to sit on, so the footer link is the
-   fallback. */
+/* The button must never sit over content, and the content column is --page wide
+   and centred, so how it is positioned depends on whether a gutter exists:
+
+     >= 1220px   the leftover width is a real gutter, so the button parks in it
+                 and the page is untouched
+     >= 640px    no gutter, so the page reserves a lane on the right and the
+                 button sits in that
+     <  640px    a lane would cost too much of a narrow screen, so there is no
+                 floating button and the footer carries the link instead
+
+   The reserved lane is one rule on the body rather than a padding added to every
+   container, so there is no convention for a new section to forget. */
+:root { --totop-lane: 3.5rem; }
+
 .to-top { display: none; }
 
 .site-footer__top {
@@ -752,14 +760,14 @@ code {
   text-underline-offset: 3px;
 }
 
-@media (min-width: 1220px) {
+@media (min-width: 640px) {
   .site-footer__top { display: none; }
 
   .to-top {
     position: fixed;
     z-index: 40;
     bottom: var(--space-8);
-    right: calc(50% - (var(--page) / 2) - 3.25rem);
+    right: var(--space-3);
     display: grid;
     place-items: center;
     width: 2.5rem;
@@ -784,6 +792,16 @@ code {
     color: var(--accent);
     border-color: var(--accent);
   }
+}
+
+/* No natural gutter at these widths, so make one. */
+@media (min-width: 640px) and (max-width: 1219px) {
+  body { padding-right: var(--totop-lane); }
+}
+
+/* Wide enough that the leftover width already holds it. */
+@media (min-width: 1220px) {
+  .to-top { right: calc(50% - (var(--page) / 2) - 3.25rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {

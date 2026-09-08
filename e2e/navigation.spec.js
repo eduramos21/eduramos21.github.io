@@ -110,35 +110,39 @@ test.describe('back to top', () => {
       .toBeLessThan(200);
   });
 
-  // The whole reason it is parked in the gutter rather than floated over the corner.
-  test('never overlaps the content column', async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
+  // The whole point of the gutter and the reserved lane. Checked at a width with a
+  // natural gutter and at two without, because those take different code paths.
+  for (const width of [1440, 1219, 900, 700]) {
+    test(`at ${width}px it never overlaps the content`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
 
-    const button = page.locator('.to-top');
-    await expect(button).toBeVisible();
+      const button = page.locator('.to-top');
+      await expect(button).toBeVisible();
 
-    const overlaps = await page.evaluate(() => {
-      const btn = document.querySelector('.to-top').getBoundingClientRect();
-      const hits = [];
+      const overlaps = await page.evaluate(() => {
+        const btn = document.querySelector('.to-top').getBoundingClientRect();
+        const hits = [];
 
-      document.querySelectorAll('main *').forEach((node) => {
-        if (!node.textContent.trim() && !node.matches('img, svg, table')) return;
-        const r = node.getBoundingClientRect();
-        if (r.width === 0 || r.height === 0) return;
-        const intersects =
-          r.left < btn.right && r.right > btn.left && r.top < btn.bottom && r.bottom > btn.top;
-        if (intersects) hits.push(node.tagName + '.' + node.className);
+        document.querySelectorAll('main *, .nav *, .site-footer *').forEach((node) => {
+          if (!node.textContent.trim() && !node.matches('img, svg, table')) return;
+          const r = node.getBoundingClientRect();
+          if (r.width === 0 || r.height === 0) return;
+          const intersects =
+            r.left < btn.right && r.right > btn.left && r.top < btn.bottom && r.bottom > btn.top;
+          if (intersects) hits.push(node.tagName + '.' + node.className);
+        });
+
+        return hits;
       });
 
-      return hits;
+      expect(overlaps).toEqual([]);
     });
+  }
 
-    expect(overlaps).toEqual([]);
-  });
-
-  test('below the gutter width it becomes a footer link instead', async ({ page }) => {
-    await page.setViewportSize({ width: 900, height: 900 });
+  test('a narrow screen gets the footer link instead of a floating button', async ({ page }) => {
+    await page.setViewportSize({ width: 500, height: 900 });
     await page.goto('/');
     await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
 
@@ -147,5 +151,12 @@ test.describe('back to top', () => {
     const footerLink = page.locator('.site-footer__top a');
     await expect(footerLink).toBeVisible();
     await expect(footerLink).toHaveAttribute('href', '#main');
+  });
+
+  test('it works on a case study page too', async ({ page }) => {
+    await page.goto('work/llm-determinism.html');
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2));
+
+    await expect(page.locator('.to-top')).toBeVisible();
   });
 });
