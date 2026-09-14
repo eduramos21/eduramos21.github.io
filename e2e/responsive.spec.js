@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test';
 const WIDTHS = [360, 768, 1440];
 const PAGES = [
   '/',
-  'work/toolshop-contract.html',
-  'work/toolshop-checkout.html',
-  'work/toolshop-selection.html',
+  'work/qa-framework-contract.html',
+  'work/qa-framework-policy.html',
+  'work/qa-framework-worked-example.html',
   'work/llm-determinism.html',
 ];
 

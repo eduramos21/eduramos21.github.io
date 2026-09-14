@@ -79,7 +79,7 @@
         At the moment, for me and my team that means a Gradle multi-module framework in Java, with Playwright for the UI (recently migrated from Selenium), REST Assured for the API and SQL for what actually got persisted, plus a determinism module for generative-AI output that cannot be exact-matched. Before that I led QA through a two-year EMV and PCI PA-DSS certification under external audit, which is where I learned what evidence has to look like when somebody outside your company is going to read it.
       </p>
       <p>
-        I write frameworks so that the wrong thing is hard to do. Instead of strings I prefer tags as annotations, so a typo will not compile. I bet on contract validation on every call, so no test can opt out and failure evidence attached by the framework, so nobody needs to remember a screenshot. The three case studies below are each one of those decisions and what it cost.
+        I write frameworks so that the wrong thing is hard to do. One config file is the only contract between what an AI agent knows and what a test stack runs, so adding a language means writing files, not rewriting agents. A policy hook judges only the line you just wrote, never the two hundred that were already there, so it survives contact with a real codebase instead of getting deleted on day two. And a decision stays traceable end to end, one ticket through every workflow, so the cost of a gap is visible rather than assumed. The three case studies below are each one of those decisions and what it cost.
       </p>
     </div>
   </section>
@@ -316,52 +316,54 @@
     <h2>Selected work</h2>
     <p class="section__lede">
       Three decisions from
-      <a href="https://github.com/eduramos21/toolshop-automation" target="_blank" rel="noopener">toolshop-automation</a>,
-      a framework I built against the Toolshop demo application in Java 21, Gradle 9, JUnit 6, Playwright and REST Assured. Each page is one decision, what it found, and what it cost.
+      <a href="https://github.com/eduramos21/qa-automation-framework" target="_blank" rel="noopener">qa-automation-framework</a>,
+      a skeleton for wiring AI agents into a real test automation stack, web and native mobile, stack-agnostic and driven by one config file and per-stack profiles. Each page is one decision, what it found, and what it cost.
       Every number comes from that repository.
     </p>
 
     <ul class="cards">
 
       <li class="card">
-        <h3><a href="work/toolshop-contract.html">Contract validation nobody can skip</a></h3>
+        <h3><a href="work/qa-framework-contract.html">One file an agent reads, one file a stack owns</a></h3>
         <p>
-          I moved OpenAPI validation onto the shared request specification as a filter, so
-          every call any test makes is validated and no test can opt out. Turning it on
-          failed 28 of 41 tests, from thirteen distinct disagreements between the document
-          and the running application.
+          The AI layer knows QA and nothing about Playwright or pytest. The profile layer
+          knows one stack and no QA reasoning. <code>qa.config.yml</code> plus each profile's
+          <code>profile.yaml</code> is the only contract between them, so adding a language
+          means writing files, not rewriting agents.
         </p>
-        <p class="card__stat"><span>28 / 41</span> tests failed the first time it ran</p>
+        <p class="card__stat"><span>4 files, 0 agents</span> changed to add a stack</p>
       </li>
 
       <li class="card">
-        <h3><a href="work/toolshop-checkout.html">One purchase, four layers</a></h3>
+        <h3><a href="work/qa-framework-policy.html">A policy hook that only judges the lines you touched</a></h3>
         <p>
-          A single checkout followed through API, UI, database and mailbox, because each of
-          them can disagree with the others. It caught a defect where one press of “finish”
-          shows a payment success message and creates no order. A suite asserting on that
-          message would have reported it passing.
+          Forbidden patterns are checked on every write, but only against lines the working
+          tree actually changed, diffed against <code>git show HEAD</code>. Dropping the hook
+          into a repo with two hundred pre-existing violations does not fail every edit to a
+          file that merely contains one.
         </p>
-        <p class="card__stat"><span>0 orders</span> behind a success message</p>
+        <p class="card__stat"><span>0</span> pre-existing violations ever block a write</p>
       </li>
 
       <li class="card">
-        <h3><a href="work/toolshop-selection.html">A selection that runs nothing must fail</a></h3>
+        <h3><a href="work/qa-framework-worked-example.html">One ticket, five workflows, three defects and one cause</a></h3>
         <p>
-          Thirteen tags as annotations rather than strings, so a misspelled tag will not
-          compile, plus one guard in the root build that fails any run whose tag expression
-          matched zero tests. Where that guard could live turned out to be the whole problem.
+          A single ticket run through refinement, design, generation, exploratory testing and
+          audit. The exploratory session found three defects that all trace back to one thing:
+          the cart is never re-read at confirm time. The audit then found the highest-risk row
+          in the whole design has no test anywhere.
         </p>
-        <p class="card__stat"><span>13 tags</span> a typo cannot get into</p>
+        <p class="card__stat"><span>3 defects</span>, one root cause</p>
       </li>
 
     </ul>
 
     <p class="prose">
-      Two more decisions in that repository that did not get their own page: accessibility is
-      asserted against a per-page baseline rather than against zero, so a new violation and a
-      fixed one both fail the build; and the same bytecode runs against local Docker, CI and
-      the hosted deployment with only configuration changing.
+      Two more decisions in that repository that did not get their own page: the profile-writing
+      workflow describes a repo's existing test style rather than correcting it, so what a
+      suite does and what it should do never end up mixed in the same file; and the same five
+      workflows run unchanged against three different stacks in the demos, TypeScript,
+      Python and mobile, with no agent needing to know which one it is talking to.
     </p>
   </section>
 

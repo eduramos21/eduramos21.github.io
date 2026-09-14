@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 const CASE_STUDIES = [
-  'work/toolshop-contract.html',
-  'work/toolshop-checkout.html',
-  'work/toolshop-selection.html',
+  'work/qa-framework-contract.html',
+  'work/qa-framework-policy.html',
+  'work/qa-framework-worked-example.html',
   'work/llm-determinism.html',
 ];
 
@@ -42,18 +42,11 @@ test.describe('case studies', () => {
     test(`${path} states its context up front`, async ({ page }) => {
       await page.goto(path);
 
-      // Every case study opens with a facts block. The toolshop ones cite the decision
-      // record they came from; the determinism one has no public repository to cite,
-      // because that work is closed source.
+      // Every case study opens with a facts block, at least a project, a component and
+      // a stack.
       const facts = page.locator('.case__facts');
       await expect(facts).toBeVisible();
       expect(await facts.locator('dt').count()).toBeGreaterThanOrEqual(3);
-
-      if (path.startsWith('work/toolshop-')) {
-        const adr = facts.locator('a[href*="/docs/adr/"]');
-        await expect(adr).toHaveCount(1);
-        await expect(adr).toHaveAttribute('href', /toolshop-automation/);
-      }
     });
   }
 

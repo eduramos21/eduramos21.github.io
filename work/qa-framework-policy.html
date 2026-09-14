@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A policy hook that only judges the lines you touched · Eduardo Ramos</title>
+<meta name="description" content="A PostToolUse hook checks every write against forbidden patterns, but diffs against git HEAD first, so it reports only violations on lines the edit actually changed.">
+<!-- meta -->
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://eduramos21.github.io/work/qa-framework-policy.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eduardo Ramos">
+<meta property="og:title" content="A policy hook that only judges the lines you touched">
+<meta property="og:description" content="A PostToolUse hook checks every write against forbidden patterns, but diffs against git HEAD first, so it reports only violations on lines the edit actually changed.">
+<meta property="og:url" content="https://eduramos21.github.io/work/qa-framework-policy.html">
+<meta property="og:image" content="https://eduramos21.github.io/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Eduardo Ramos, QA Test Automation Engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A policy hook that only judges the lines you touched">
+<meta name="twitter:description" content="A PostToolUse hook checks every write against forbidden patterns, but diffs against git HEAD first, so it reports only violations on lines the edit actually changed.">
+<meta name="twitter:image" content="https://eduramos21.github.io/assets/img/og-image.png">
+<!-- /meta -->
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="../index.html">Edu Ramos</a>
+    <ul class="nav__menu nav__menu--static">
+      <li><a href="../index.html#work">All work</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="case">
+
+  <h1>A policy hook that only judges the lines you touched</h1>
+
+  <dl class="case__facts">
+    <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/qa-automation-framework" target="_blank" rel="noopener">qa-automation-framework</a></dd></div>
+    <div><dt>Component</dt><dd><code>bin/qa-policy</code>, run from a <code>PostToolUse</code> hook</dd></div>
+    <div><dt>Stack</dt><dd>Python, stdlib only, runs on the critical path of every write</dd></div>
+  </dl>
+
+  <div class="prose">
+
+    <h2>The problem</h2>
+    <p>
+      A hook that fails on any forbidden pattern anywhere in a file sounds like a guardrail
+      until it meets a real codebase. Drop it into a repo that already has two hundred hard
+      sleeps in it, and it fails every edit to any file that happens to contain one, including
+      edits that have nothing to do with the sleep. That is not a guardrail, it is a wall, and
+      a wall like that gets the hook deleted within a day.
+    </p>
+    <p>
+      The pre-existing sleeps are still real problems. The question is where a decision about
+      two hundred of them belongs, and it is not inside a hook that blocks one unrelated line.
+    </p>
+
+    <h2>What I built</h2>
+    <p>
+      <code>bin/qa-policy</code> checks a file's text against <code>policies.forbid</code> from
+      <code>qa.config.yml</code>: hard sleeps, absolute xpath, an assertion buried inside a
+      conditional so the check can be skipped, a test with no assertion at all, shared mutable
+      state between tests. Five rules, each a small regex or a short heuristic, textual on
+      purpose, because the job is catching the obvious thing quickly in a hook, not parsing
+      five languages correctly. Anything subtler is the suite auditor's job, and that one has a
+      model to reason with.
+    </p>
+    <p>
+      Wired through <code>hooks/hooks.json</code> as a <code>PostToolUse</code> hook on
+      <code>Write</code> and <code>Edit</code>, it runs after every file an agent touches, reads
+      the tool payload from stdin, and checks that one file.
+    </p>
+
+    <h2>What it found</h2>
+    <p>
+      The check that makes it survivable is <code>changed_lines()</code>: it reads the file as
+      committed at <code>git show HEAD:&lt;path&gt;</code>, diffs it against the working copy
+      with <code>difflib.SequenceMatcher</code>, and keeps only the line numbers that were
+      inserted or replaced. <code>--hook</code> mode implies <code>--changed-only</code>, so a
+      violation is only ever reported if it sits on a line this edit actually touched.
+    </p>
+
+    <div class="scroll-x" tabindex="0">
+    <table class="case__table">
+      <thead>
+        <tr><th scope="col">Situation</th><th scope="col">Result</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>File has 3 pre-existing sleeps, edit touches an unrelated line</td><td>0 violations reported</td></tr>
+        <tr><td>Same file, edit adds one new sleep</td><td>1 violation reported, that line only</td></tr>
+        <tr><td>File is new, or git cannot answer the diff</td><td>every line checked, the safe direction</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>
+      When it does fire in hook mode it exits 2, not 1, which is the exit code that feeds the
+      message back to the model that just wrote the file, so the fix happens before the file
+      lands rather than after a human notices it later.
+    </p>
+
+    <h2>What it cost</h2>
+    <p>
+      A hook that is honest about what it cannot see. It reports two of the five rules as
+      heuristics in its own output, because a conditional assertion or an assertion-free test
+      is a pattern match, not a proof, and it can be wrong in either direction. The pre-existing
+      violations a diff-scoped hook lets through do not disappear; they surface later, in
+      <code>/qa:audit</code>, which is where a decision about two hundred old sleeps actually
+      belongs, made once, on purpose, instead of one file at a time under a red hook.
+    </p>
+
+  </div>
+
+  <p class="case__back"><a href="../index.html#work">Back to selected work</a></p>
+</main>
+
+<footer class="site-footer">
+  <p><a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source of this site</a></p>
+  <p class="site-footer__top"><a href="#main">Back to top</a></p>
+</footer>
+<a class="to-top" href="#main" aria-label="Back to top" data-visible="false">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+    <path d="M12 19V6M6 12l6-6 6 6" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+<script src="../js/main.js"></script>
+</body>
+</html>

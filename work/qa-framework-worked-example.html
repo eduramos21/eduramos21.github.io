@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One ticket, five workflows, three defects and one cause · Eduardo Ramos</title>
+<meta name="description" content="A single ticket run through refinement, design, generation, exploratory testing and audit. Three defects found by exploration trace back to one cause, and the highest-risk row has no test.">
+<!-- meta -->
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://eduramos21.github.io/work/qa-framework-worked-example.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eduardo Ramos">
+<meta property="og:title" content="One ticket, five workflows, three defects and one cause">
+<meta property="og:description" content="A single ticket run through refinement, design, generation, exploratory testing and audit. Three defects found by exploration trace back to one cause, and the highest-risk row has no test.">
+<meta property="og:url" content="https://eduramos21.github.io/work/qa-framework-worked-example.html">
+<meta property="og:image" content="https://eduramos21.github.io/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Eduardo Ramos, QA Test Automation Engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One ticket, five workflows, three defects and one cause">
+<meta name="twitter:description" content="A single ticket run through refinement, design, generation, exploratory testing and audit. Three defects found by exploration trace back to one cause, and the highest-risk row has no test.">
+<meta name="twitter:image" content="https://eduramos21.github.io/assets/img/og-image.png">
+<!-- /meta -->
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="../index.html">Edu Ramos</a>
+    <ul class="nav__menu nav__menu--static">
+      <li><a href="../index.html#work">All work</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="case">
+
+  <h1>One ticket, five workflows, three defects and one cause</h1>
+
+  <dl class="case__facts">
+    <div><dt>Project</dt><dd><a href="https://github.com/eduramos21/qa-automation-framework" target="_blank" rel="noopener">qa-automation-framework</a></dd></div>
+    <div><dt>Component</dt><dd><code>examples/artifacts/</code>, the CART-142 worked example</dd></div>
+    <div><dt>Stack</dt><dd>TypeScript, Playwright, run against saucedemo.com live</dd></div>
+  </dl>
+
+  <div class="prose">
+
+    <h2>The problem</h2>
+    <p>
+      Five workflows on paper are five separate claims. The only way to know whether they hold
+      together, and whether a decision made in the first one is still visible by the last one,
+      is to run one real ticket through all of them and keep every artefact.
+      <code>examples/artifacts/</code> is that run, against the same demo site the example
+      suites already test, so every number in it can be checked against the running app.
+    </p>
+
+    <h2>What it found, workflow by workflow</h2>
+    <p>
+      The ticket: the checkout page should show item total, tax and total, tax is 8%, a
+      developer commented it should be quick.
+    </p>
+    <p>
+      <code>/qa:refine</code> turned that into five acceptance criteria and five open
+      questions. Two of them are why the story was not ready to build: nobody said whether to
+      round half up, half even or truncate, and nobody said whether the total adds the
+      displayed tax or the raw one. Three developers pick three answers and all three satisfy
+      “correctly”, and that is a cent per order nobody notices until finance closes the month.
+    </p>
+    <p>
+      <code>/qa:design</code> scored thirteen conditions. Eight are unit rows, three are e2e,
+      one waits on an open question, one is deliberately not automated. It picked its test
+      cart on purpose, $29.99 plus $9.99, because the raw tax of $3.1984 gives $3.19 under
+      truncation and $3.20 under rounding: a cart where both agree would pass either way and
+      tell nobody anything.
+    </p>
+    <p>
+      <code>/qa:generate</code> wrote and ran the three e2e rows, then broke each one on purpose
+      to confirm it fails for the right reason. It left the eight unit rows unwritten, because
+      this project has no unit layer, and promoting them to e2e would make them slow and fail
+      without saying which of forty things broke.
+    </p>
+
+    <h2>What exploration found</h2>
+    <p>
+      <code>/qa:explore</code> ran a 55-minute session against a charter the design step
+      produced and found three defects on the live site:
+    </p>
+    <ul>
+      <li>the back button after confirming an order returns to a live Finish button, and pressing it confirms a second order with no sign anything happened</li>
+      <li>emptying the cart in a second tab does not stop the first tab's Finish button from succeeding</li>
+      <li>navigating straight to the checkout overview with an empty cart shows <code>Item total: $0</code> next to <code>Tax: $0.00</code> and lets a $0.00 order through</li>
+    </ul>
+    <p>
+      All three look like one cause: the cart is read once when a page renders and never
+      re-read when the order is actually confirmed. Validating the cart at confirm time, rather
+      than trusting whatever the page already shows, covers all three at once, which turned
+      three fixes into one.
+    </p>
+
+    <h2>What the audit found</h2>
+    <p>
+      <code>/qa:audit</code> scored the resulting suite 5s on mechanics, speed, isolation,
+      waiting and having a real assertion behind every test. It scored 2 on layers and 2 on
+      coverage against the requirement, and both twos are the same gap: the highest-risk
+      condition in the entire design, the rounding rule, scored 9 and has no test anywhere,
+      because this suite has no unit layer to put it in. The three defects exploration just
+      found also have no regression test yet, which the audit flags as the cheaper fix to do
+      first, before the underlying bugs are even fixed, so the fix has something to prove
+      itself against.
+    </p>
+
+    <h2>What it cost</h2>
+    <p>
+      Nothing here was an accident. Every gap traces back to a row in a design document or a
+      line in a generation report: the rounding tests were never promised at the e2e layer, the
+      empty-cart row was deliberately deferred pending an open question. The audit's actual job
+      turned out to be narrower than “find problems”: it is noticing which recorded decisions
+      have not been acted on since, and ranking them by what it costs to leave each one
+      standing.
+    </p>
+
+  </div>
+
+  <p class="case__back"><a href="../index.html#work">Back to selected work</a></p>
+</main>
+
+<footer class="site-footer">
+  <p><a href="https://github.com/eduramos21/eduramos21.github.io" target="_blank" rel="noopener">Source of this site</a></p>
+  <p class="site-footer__top"><a href="#main">Back to top</a></p>
+</footer>
+<a class="to-top" href="#main" aria-label="Back to top" data-visible="false">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+    <path d="M12 19V6M6 12l6-6 6 6" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -3,9 +3,9 @@ import AxeBuilder from '@axe-core/playwright';
 
 const PAGES = [
   '/',
-  'work/toolshop-contract.html',
-  'work/toolshop-checkout.html',
-  'work/toolshop-selection.html',
+  'work/qa-framework-contract.html',
+  'work/qa-framework-policy.html',
+  'work/qa-framework-worked-example.html',
   'work/llm-determinism.html',
   '404.html',
 ];
