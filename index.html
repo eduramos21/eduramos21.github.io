@@ -368,13 +368,16 @@
   </section>
 
   <section class="section" id="ai-quality">
-    <h2>AI determinism-core</h2>
+    <h2>AI determinism checker</h2>
+          
+
     <p class="section__tagline">
         Catching when the model quietly starts giving worse answers
     </p>
 
     <p class="section__lede">
-      A model call can be subtly wrong in a way an ordinary pass or fail test never catches.
+      A model call can be subtly wrong in a way an ordinary pass or fail test never catches. With this in mind, I built the
+      <a href="https://github.com/eduramos21/ai-determinism-checker" target="_blank" rel="noopener">ai-determinism-checker</a>.
       This suite runs the AI many times against a fixed input and checks every field against
       a rule, so drift turns up in a nightly run instead of in production.
     </p>
